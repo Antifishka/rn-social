@@ -25,6 +25,7 @@ export default function  RegistrationScreen() {
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
+    setIsShowPassword(false);
     Keyboard.dismiss();
     console.log(state);
     setState(initialState);
@@ -62,16 +63,20 @@ export default function  RegistrationScreen() {
               }
             />
             
-            <TextInput
-              style={{ ...styles.input, marginBottom: 43 }}
-              placeholder="Пароль"
-              value={state.password}
-              secureTextEntry={true}
-              onFocus={()=> setIsShowKeyboard(true)}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, password: value }))
-              }
-            />
+            <View>
+              <TextInput
+                style={{ ...styles.input, marginBottom: 43, position: "relative" }}
+                placeholder="Пароль"
+                value={state.password}
+                secureTextEntry={true}
+                onFocus={()=> setIsShowKeyboard(true)}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, password: value }))
+                }
+              />
+              <Text style={styles.inputBtn}
+                  onPress={() => setIsShowPassword(!isShowPassword)}>Показать</Text>
+            </View>  
             
             <TouchableOpacity
               activeOpacity={0.8}
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
   },
   form: {
     paddingTop: 92,
-    paddingBottom: 66,
+    paddingBottom: 45,
     paddingHorizontal: 16,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -123,6 +128,14 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     color: "#212121",
     backgroundColor: "#F6F6F6",
+  },
+  inputBtn: {
+    position: "absolute",
+    right: 16,
+    top: 16,
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    color: "#1B4371",
   },
   btn: {
     justifyContent: "center",

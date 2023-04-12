@@ -12,19 +12,20 @@ import {
 } from "react-native";
 
 const initialState = {
-  name: "",
   email: "",
   password: "",
 };
 
 export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
 
   console.log(Platform.OS);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
+    setIsShowPassword(false);
     Keyboard.dismiss();
     console.log(state);
     setState(initialState);
@@ -41,17 +42,7 @@ export default function LoginScreen() {
               ...styles.form,
               paddingBottom: isShowKeyboard && Platform.OS === "ios" ? 200 : 66,
             }}>
-            <Text style={styles.formTitle}>Регистрация</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Логин"
-              value={state.name}
-              onFocus={()=> setIsShowKeyboard(true)}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, name: value }))
-              }
-            />
-            
+            <Text style={styles.formTitle}>Войти</Text>
             <TextInput
               style={styles.input}
               placeholder="Адрес электронной почты"
@@ -62,25 +53,33 @@ export default function LoginScreen() {
               }
             />
             
-            <TextInput
-              style={{ ...styles.input, marginBottom: 43 }}
-              placeholder="Пароль"
-              value={state.password}
-              secureTextEntry={true}
-              onFocus={()=> setIsShowKeyboard(true)}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, password: value }))
-              }
-            />
+            <View>
+              <TextInput
+                style={{ ...styles.input, marginBottom: 43 , position: "relative" }}
+                placeholder="Пароль"
+                value={state.password}
+                secureTextEntry={!isShowPassword}
+                onFocus={()=> setIsShowKeyboard(true)}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, password: value }))
+                }
+              />
+              <Text style={styles.inputBtn}
+                onPress={() => setIsShowPassword(!isShowPassword)}>Показать</Text>
+            </View>
             
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.btn}
-              onPress={keyboardHide}>
-              <Text style={styles.btnTitle}>Зарегистрироваться</Text>
-            </TouchableOpacity>
+            {!isShowKeyboard && 
+              <>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.btn}
+                  onPress={keyboardHide}>
+                  <Text style={styles.btnTitle}>Зарегистрироваться</Text>
+                </TouchableOpacity>
+                
+                <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
+                </>}
             
-            <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
           </View>
         </ImageBackground>
       </View>
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
   },
   form: {
     paddingTop: 92,
-    paddingBottom: 66,
+    paddingBottom: 111,
     paddingHorizontal: 16,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -124,6 +123,14 @@ const styles = StyleSheet.create({
     color: "#212121",
     backgroundColor: "#F6F6F6",
   },
+  inputBtn: {
+    position: "absolute",
+    right: 16,
+    top: 16,
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    color: "#1B4371",
+  },
   btn: {
     justifyContent: "center",
     alignItems: "center",
@@ -135,13 +142,11 @@ const styles = StyleSheet.create({
   btnTitle: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
-    fontWeight: 400,
     color: "#FFFFFF",
   },
   text: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
-    fontWeight: 400,
     textAlign: "center",
     color: "#1B4371",
   },
