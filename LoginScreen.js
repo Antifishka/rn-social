@@ -9,6 +9,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from "react-native";
 
 const initialState = {
@@ -37,50 +38,56 @@ export default function LoginScreen() {
         <ImageBackground
           style={styles.imageBg}
           source={require("./assets/images/bg.jpg")}>
-          <View
-            style={{
-              ...styles.form,
-              paddingBottom: isShowKeyboard && Platform.OS === "ios" ? 200 : 66,
-            }}>
-            <Text style={styles.formTitle}>Войти</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Адрес электронной почты"
-              onFocus={()=> setIsShowKeyboard(true)}
-              value={state.email}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, email: value }))
-              }
-            />
-            
-            <View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}>
+            <View
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 111,
+              }}>
+              <Text style={styles.formTitle}>Войти</Text>
               <TextInput
-                style={{ ...styles.input, marginBottom: 43 , position: "relative" }}
-                placeholder="Пароль"
-                value={state.password}
-                secureTextEntry={!isShowPassword}
+                style={styles.input}
+                placeholder="Адрес электронной почты"
                 onFocus={()=> setIsShowKeyboard(true)}
+                value={state.email}
                 onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, password: value }))
+                  setState((prevState) => ({ ...prevState, email: value }))
                 }
               />
-              <Text style={styles.inputBtn}
-                onPress={() => setIsShowPassword(!isShowPassword)}>Показать</Text>
-            </View>
-            
-            {!isShowKeyboard && 
-              <>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.btn}
-                  onPress={keyboardHide}>
-                  <Text style={styles.btnTitle}>Зарегистрироваться</Text>
-                </TouchableOpacity>
-                
-                <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
+              
+              <View>
+                <TextInput
+                  style={{
+                    ...styles.input,
+                    marginBottom: isShowKeyboard ? 0 : 43,
+                    position: "relative"
+                  }}
+                  placeholder="Пароль"
+                  value={state.password}
+                  secureTextEntry={!isShowPassword}
+                  onFocus={()=> setIsShowKeyboard(true)}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
+                  }
+                />
+                <Text style={styles.inputBtn}
+                  onPress={() => setIsShowPassword(!isShowPassword)}>Показать</Text>
+              </View>
+              
+              {!isShowKeyboard && 
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.btn}
+                    onPress={keyboardHide}>
+                    <Text style={styles.btnTitle}>Войти</Text>
+                  </TouchableOpacity>
+                  
+                  <Text style={styles.text}>Нет аккаунта? Зарегистрироваться</Text>
                 </>}
-            
-          </View>
+            </View>
+          </KeyboardAvoidingView>  
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>  
@@ -98,8 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   form: {
-    paddingTop: 92,
-    paddingBottom: 111,
+    paddingTop: 32,
     paddingHorizontal: 16,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,

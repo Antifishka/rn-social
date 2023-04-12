@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -9,7 +9,10 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Dimensions,
 } from "react-native";
+import PlusIcon from "./assets/svg/plus.svg";
 
 const initialState = {
   name: "",
@@ -19,9 +22,23 @@ const initialState = {
 
 export default function  RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
+  const [dimensions, setDimensions] = useState(
+    Dimensions.get("window").width);
 
   console.log(Platform.OS);
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get("window").width;
+
+      setDimensions(width);
+    };
+
+    const dimensionsHandler = Dimensions.addEventListener("change", onChange);
+    return () => dimensionsHandler.remove();
+  }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -37,56 +54,73 @@ export default function  RegistrationScreen() {
         <ImageBackground
           style={styles.imageBg}
           source={require("./assets/images/bg.jpg")}>
-          <View
-            style={{
-              ...styles.form,
-              paddingBottom: isShowKeyboard && Platform.OS === "ios" ? 200 : 66,
-            }}>
-            <Text style={styles.formTitle}>Регистрация</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Логин"
-              value={state.name}
-              onFocus={()=> setIsShowKeyboard(true)}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, name: value }))
-              }
-            />
-            
-            <TextInput
-              style={styles.input}
-              placeholder="Адрес электронной почты"
-              onFocus={()=> setIsShowKeyboard(true)}
-              value={state.email}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, email: value }))
-              }
-            />
-            
-            <View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}>
+            <View
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 45,
+              }}>
+              <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
+                <View style={styles.avatarBtn}>
+                  {/* <PlusIcon/> */}
+                </View>
+              </View>
+              
+              <Text style={styles.formTitle}>Регистрация</Text>
+
               <TextInput
-                style={{ ...styles.input, marginBottom: 43, position: "relative" }}
-                placeholder="Пароль"
-                value={state.password}
-                secureTextEntry={true}
+                style={styles.input}
+                placeholder="Логин"
+                value={state.name}
                 onFocus={()=> setIsShowKeyboard(true)}
                 onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, password: value }))
+                  setState((prevState) => ({ ...prevState, name: value }))
                 }
               />
-              <Text style={styles.inputBtn}
+              
+              <TextInput
+                style={styles.input}
+                placeholder="Адрес электронной почты"
+                onFocus={()=> setIsShowKeyboard(true)}
+                value={state.email}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, email: value }))
+                }
+              />
+              
+              <View>
+                <TextInput
+                  style={{
+                    ...styles.input,
+                    marginBottom: isShowKeyboard ? 0 : 43,
+                    position: "relative"
+                  }}
+                  placeholder="Пароль"
+                  value={state.password}
+                  secureTextEntry={!isShowPassword}
+                  onFocus={()=> setIsShowKeyboard(true)}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
+                  }
+                />
+                <Text style={styles.inputBtn}
                   onPress={() => setIsShowPassword(!isShowPassword)}>Показать</Text>
-            </View>  
-            
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.btn}
-              onPress={keyboardHide}>
-              <Text style={styles.btnTitle}>Зарегистрироваться</Text>
-            </TouchableOpacity>
-            
-            <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
-          </View>
+              </View>  
+
+              {!isShowKeyboard && 
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.btn}
+                    onPress={keyboardHide}>
+                    <Text style={styles.btnTitle}>Войти</Text>
+                  </TouchableOpacity>
+                  
+                  <Text style={styles.text}>Уже есть аккаунт? Войти</Text>
+                </>}
+            </View>
+          </KeyboardAvoidingView>  
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>  
@@ -104,12 +138,30 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   form: {
+    position: "relative",
     paddingTop: 92,
-    paddingBottom: 45,
     paddingHorizontal: 16,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     backgroundColor: "#FFFFFF",
+  },
+  avatarThumb: {
+    position: "absolute",
+    top: -60,
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+  },
+  avatarBtn: {
+    position: "absolute",
+    right: -25 / 2,
+    bottom: 14,
+    width: 25,
+    height: 25,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#FF6C00",
   },
   formTitle: {
     marginBottom: 33,
