@@ -12,6 +12,8 @@ import {
     KeyboardAvoidingView,
     ImageBackground,
 } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import { theme } from "../../constants/theme";
 
 const initialState = {
   name: "",
@@ -63,9 +65,11 @@ export default function RegistrationScreen({ navigation }) {
                         paddingBottom: isShowKeyboard ? 32 : 45,
                         }}>
                         <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
-                            <View style={styles.avatarBtn}>
-                            {/* <PlusIcon/> */}
-                            </View>
+                            <TouchableOpacity style={styles.avatarBtn}>
+                                <Ionicons name="add-outline"
+                                    size={21}
+                                    color={theme.colors.accent} />
+                                </TouchableOpacity>
                         </View>
                                 
                         <Text style={styles.formTitle}>Реєстрація</Text>
@@ -157,6 +161,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         right: -25 / 2,
         bottom: 14,
+        justifyContent: "center",
+        alignItems: "center",
         width: 25,
         height: 25,
         borderRadius: 50,

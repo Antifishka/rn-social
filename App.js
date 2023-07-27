@@ -1,34 +1,18 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  ImageBackground,
-  Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-} from "react-native";
+import React from "react";
+import { Platform } from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from '@react-navigation/native';
 import { useRoute } from "./src/router";
 
 export default function App() {
   console.log(Platform.OS);
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [isShowPassword, setIsShowPassword] = useState(false);
-  const routing = useRoute(null);
+  const routing = useRoute({});
   
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
   });
-
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    setIsShowPassword(false);
-    Keyboard.dismiss();
-  };
 
   if (!fontsLoaded) {
     return null;

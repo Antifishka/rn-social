@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Platform } from "react-native";
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RegistrationScreen from "./screens/auth/RegistrationScreen";
@@ -12,6 +12,7 @@ import { theme } from "./constants/theme";
 // icons import
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -38,6 +39,7 @@ export const useRoute = (isAuth) => {
         screenOptions={{
             tabBarShowLabel: false,
             headerStyle: styles.header,
+            headerTitleAlign: "center",
             tabBarStyle: styles.tabBar,
         }}>
         <MainTab.Screen name='Posts'
@@ -57,7 +59,11 @@ export const useRoute = (isAuth) => {
                             } />
                     </View>    
                 ),
-
+                headerRight: () => (
+                    <TouchableOpacity style={styles.iconLogout} activeOpacity={0.8} >
+                        <MaterialIcons name="logout" size={26} color={theme.colors.placeholder} />
+                    </TouchableOpacity>    
+                )           
             }}
         />
         <MainTab.Screen name='Create'
@@ -114,9 +120,19 @@ const styles = StyleSheet.create({
         width: 70,
         height: 40,
         marginTop: 9,
+        marginBottom: Platform.OS === 'android' ? 22 : 0,
         borderRadius: 20
     },
+    iconLogout: {
+        marginRight: 10,
+    },
     tabBar: {
+        ...Platform.select({
+            android: {
+                height: 72,
+            }
+        }),
+        marginBottomBottom: 22,
         borderTopWidth: 1,
         borderBottomColor: theme.colors.placeholder,
     }
