@@ -26,7 +26,7 @@ export default function RegistrationScreen({ navigation }) {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [dimensions, setDimensions] = useState(
-        Dimensions.get("window").width);
+    Dimensions.get("window").width);
 
     useEffect(() => {
         const onChange = () => {
@@ -61,8 +61,8 @@ export default function RegistrationScreen({ navigation }) {
                         behavior={Platform.OS == "ios" ? "padding" : "height"}> 
                         <View
                         style={{
-                        ...styles.form,
-                        paddingBottom: isShowKeyboard ? 32 : 45,
+                            ...styles.form,
+                            paddingBottom: isShowKeyboard ? 32 : 45,
                         }}>
                         <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
                             <TouchableOpacity style={styles.avatarBtn}>
@@ -214,6 +214,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 400,
         textAlign: "center",
-        color: "#1B4371",
+        color: theme.colors.secondaryAccent,
     },
 });
