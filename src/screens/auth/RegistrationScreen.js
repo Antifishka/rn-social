@@ -201,13 +201,13 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         height: 51,
         borderRadius: 100,
-        backgroundColor: "#FF6C00",
+        backgroundColor: theme.colors.accent,
     },
     btnTitle: {
         fontFamily: "Roboto-Regular",
         fontSize: 16,
         fontWeight: 400,
-        color: "#FFFFFF",
+        color: theme.colors.white,
     },
     text: {
         fontFamily: "Roboto-Regular",

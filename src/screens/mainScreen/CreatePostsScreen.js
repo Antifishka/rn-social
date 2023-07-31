@@ -1,20 +1,22 @@
 import React, {useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 
-const dimensions = Dimensions.get("window");
-
-export default function CreateScreen() {
+export default function CreateScreen({ navigation }) {
     const [camera, setCamera] = useState(null);
     const [photo, setPhoto] = useState('');
 
     const takePhoto = async () => {
         const photo = await camera.takePictureAsync();
-        console.log(photo.uri, "photo");
         setPhoto(photo.uri);
+        console.log("photo", photo.uri);
     };
+
+    const sendData = () => {
+        navigation.navigate("Posts", { photo });
+    }
 
     return (
         <View style={styles.container}>
@@ -22,17 +24,25 @@ export default function CreateScreen() {
                 <TouchableOpacity onPress={takePhoto}
                     style={{...styles.cameraBtn,
                         backgroundColor: photo ? 'rgba(255, 255, 255, 0.3)' :  theme.colors.white }}>
-                    <FontAwesome name="camera" size={24} color={theme.colors.placeholder} />
+                    <FontAwesome name="camera" size={24}
+                        color={photo ? theme.colors.white : theme.colors.placeholder} />
                 </TouchableOpacity>
             </Camera>
 
-            {photo && <View style={styles.preview}>
+            {photo && <View style={styles.previewContainer}>
                 <Image source={{ uri: photo }}
                     alt='preview'
                     style={styles.previewImg} />
             </View>}
 
-            <Text style={styles.text}>{photo? 'Редагувати фото' : 'Завантажте фото'}</Text>
+            <Text style={styles.text}>{photo ? 'Редагувати фото' : 'Завантажте фото'}</Text>
+            
+            <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.btn}
+                onPress={sendData} >
+                <Text style={styles.btnTitle}>Опубліковати</Text>
+            </TouchableOpacity>
         </View>
     )    
 };
@@ -54,7 +64,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: theme.colors.border,
 
-        backgroundColor: theme.colors.background,
+        backgroundColor: "#F6F6F6",
     },
     cameraBtn: {
         justifyContent: "center",
@@ -63,11 +73,10 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 50,
     },
-    preview: {
+    previewContainer: {
         position: "absolute",
         flex: 1,
         borderRadius: 8,
-        backgroundColor: "#ffb8c6",
         top: 0,
         left: 0,
     },
@@ -83,5 +92,18 @@ const styles = StyleSheet.create({
         fontWeight: 400,
 
         color: theme.colors.placeholder,
-    }
+    },
+    btn: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: 51,
+        borderRadius: 100,
+        backgroundColor: theme.colors.accent,
+    },
+    btnTitle: {
+        fontFamily: "Roboto-Regular",
+        fontSize: 16,
+        fontWeight: 400,
+        color: theme.colors.white,
+    },
 });
