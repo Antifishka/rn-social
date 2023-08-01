@@ -77,6 +77,7 @@ export default function RegistrationScreen({ navigation }) {
                         <TextInput
                             style={styles.input}
                             placeholder="Логін"
+                            placeholderTextColor={theme.colors.placeholder}
                             value={state.name}
                             onFocus={()=> setIsShowKeyboard(true)}
                             onChangeText={(value) =>
@@ -85,6 +86,7 @@ export default function RegistrationScreen({ navigation }) {
                         <TextInput
                             style={styles.input}
                             placeholder="Адреса електронної пошти"
+                            placeholderTextColor={theme.colors.placeholder}
                             onFocus={()=> setIsShowKeyboard(true)}
                             value={state.email}
                             onChangeText={(value) =>
@@ -98,6 +100,7 @@ export default function RegistrationScreen({ navigation }) {
                                 position: "relative"
                             }}
                             placeholder="Пароль"
+                            placeholderTextColor={theme.colors.placeholder}
                             value={state.password}
                             secureTextEntry={!isShowPassword}
                             onFocus={()=> setIsShowKeyboard(true)}
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto-Medium",
         fontSize: 30,
         textAlign: "center",
-        color: "#212121",
+        color: theme.colors.mainText,
     },
     input: {
         marginBottom: 16,
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 8,
         fontFamily: "Roboto-Regular",
-        color: "#212121",
+        color: theme.colors.mainText,
         backgroundColor: "#F6F6F6",
     },
     inputBtn: {

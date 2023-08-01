@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
 } from "react-native";
+import { theme } from "../../constants/theme";
 
 const initialState = {
   email: "",
@@ -53,6 +54,7 @@ export default function LoginScreen({ navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder="Адреса електронної пошти"
+                placeholderTextColor={theme.colors.placeholder}
                 onFocus={() => setIsShowKeyboard(true)}
                 value={state.email}
                 onChangeText={(value) =>
@@ -67,6 +69,7 @@ export default function LoginScreen({ navigation }) {
                       position: "relative"
                     }}
                     placeholder="Пароль"
+                    placeholderTextColor={theme.colors.placeholder}
                     value={state.password}
                     secureTextEntry={!isShowPassword}
                     onFocus={()=> setIsShowKeyboard(true)}
@@ -134,7 +137,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 8,
     fontFamily: "Roboto-Regular",
-    color: "#212121",
+    color: theme.colors.mainText,
     backgroundColor: "#F6F6F6",
   },
     inputBtn: {
@@ -156,7 +159,7 @@ const styles = StyleSheet.create({
   btnTitle: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
-    color: "#FFFFFF",
+    color: theme.colors.white,
   },
   text: {
     fontFamily: "Roboto-Regular",

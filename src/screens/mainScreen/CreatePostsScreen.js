@@ -1,22 +1,42 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { Camera } from 'expo-camera';
+import * as Location from "expo-location";
 import { FontAwesome } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 
 export default function CreateScreen({ navigation }) {
     const [camera, setCamera] = useState(null);
     const [photo, setPhoto] = useState('');
 
+    useEffect(() => {
+        (async () => {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            console.log("status", status);
+
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+        })();
+    }, []);
+
     const takePhoto = async () => {
         const photo = await camera.takePictureAsync();
         setPhoto(photo.uri);
         console.log("photo", photo.uri);
+
+        const location = await Location.getCurrentPositionAsync();
+        console.log("latitude", location.coords.latitude);
+        console.log("longitude", location.coords.longitude);
     };
 
     const sendData = () => {
         navigation.navigate("Posts", { photo });
     }
+
+
 
     return (
         <View style={styles.container}>
@@ -36,12 +56,41 @@ export default function CreateScreen({ navigation }) {
             </View>}
 
             <Text style={styles.text}>{photo ? 'Редагувати фото' : 'Завантажте фото'}</Text>
+
+            <TextInput
+                style={styles.input}
+                placeholder="Назва..."
+                placeholderTextColor={theme.colors.placeholder}
+                // value={title}
+                // onFocus={()=> setIsShowKeyboard(true)}
+                // onChangeText={(value) =>
+                //     setState((prevState) => ({ ...prevState, name: value }))}
+            />
+
+            <TextInput
+                style={{
+                    ...styles.input,
+                    marginBottom:32, paddingLeft: 28 }}
+                placeholder="Місцевість..."
+                placeholderTextColor={theme.colors.placeholder}
+                // value={state.name}
+                // onFocus={()=> setIsShowKeyboard(true)}
+                // onChangeText={(value) =>
+                //     setState((prevState) => ({ ...prevState, name: value }))}
+            />
             
             <TouchableOpacity
                 activeOpacity={0.8}
-                style={styles.btn}
+                style={styles.sendBtn}
                 onPress={sendData} >
-                <Text style={styles.btnTitle}>Опубліковати</Text>
+                <Text style={styles.sendBtnTitle}>Опубліковати</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.deleteBtn}
+                onPress={()=>{}} >
+                <Feather name="trash-2" size={24} color={theme.colors.placeholder} />
             </TouchableOpacity>
         </View>
     )    
@@ -54,6 +103,7 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.white,
     },
     camera: {
+        overflow: "hidden",
         position: "relative",
         justifyContent: "center",
         alignItems: "center",
@@ -74,6 +124,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     previewContainer: {
+        overflow: "hidden",
         position: "absolute",
         flex: 1,
         borderRadius: 8,
@@ -81,7 +132,6 @@ const styles = StyleSheet.create({
         left: 0,
     },
     previewImg: {
-        overflow: 'hidden',
         height: 240, 
         resizeMode: 'cover',
     },
@@ -93,17 +143,39 @@ const styles = StyleSheet.create({
 
         color: theme.colors.placeholder,
     },
-    btn: {
+    input: {
+        marginBottom: 16,
+        borderWidth: 0,
+        borderBottomWidth: 1,
+        borderColor: "#E8E8E8",
+        height: 50,
+        fontFamily: "Roboto-Regular",
+        fontSize: 16,
+        color: theme.colors.mainText,
+    },
+    sendBtn: {
         justifyContent: "center",
         alignItems: "center",
         height: 51,
         borderRadius: 100,
-        backgroundColor: theme.colors.accent,
+        backgroundColor: theme.colors.background,
     },
-    btnTitle: {
+    sendBtnTitle: {
         fontFamily: "Roboto-Regular",
         fontSize: 16,
         fontWeight: 400,
-        color: theme.colors.white,
+        color: theme.colors.placeholder,
     },
+    deleteBtn: {
+        marginTop: "auto",
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginBottom: 22,
+        justifyContent: "center",
+        alignItems: "center",
+        width: 70,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: theme.colors.background,
+    }
 });
