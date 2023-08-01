@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RegistrationScreen from "./screens/auth/RegistrationScreen";
 import LoginScreen from "./screens/auth/LoginScreen";
-import PostsScreen from "./screens/mainScreen/PostsScreen";
+import HomeScreen from "./screens/mainScreen/HomeScreen";
 import CreateScreen from "./screens/mainScreen/CreatePostsScreen";
 import ProfileScreen from "./screens/mainScreen/ProfileScreen";
 import { theme } from "./constants/theme";
@@ -42,8 +42,8 @@ export const useRoute = (isAuth) => {
             headerTitleAlign: "center",
             tabBarStyle: styles.tabBar,
         }}>
-        <MainTab.Screen name='Posts'
-            component={PostsScreen}
+        <MainTab.Screen name='Home'
+            component={HomeScreen}
             options={{
                 headerTitle: "Публікації",
                 tabBarIcon: ({ focused }) => (

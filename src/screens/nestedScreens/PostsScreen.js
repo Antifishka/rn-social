@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 
-export default function PostsScreen({ route, navigation }) {
+export default function PostsScreen({ route }) {
     const [posts, setPosts] = useState([]);
     console.log("route.params", route.params);
 
@@ -29,8 +29,7 @@ export default function PostsScreen({ route, navigation }) {
                         <Text style={styles.title}>Ліс</Text>
 
                         <View style={styles.postInfo}>
-                            <TouchableOpacity style={styles.comments}
-                                onPress={() => navigation.navigate('Comments')}>
+                            <View style={styles.comments}>
                                 <Feather name="message-circle" size={24}
                                     color={theme.colors.placeholder}
                                     />
@@ -38,16 +37,15 @@ export default function PostsScreen({ route, navigation }) {
                                     ...styles.description,
                                     color: theme.colors.placeholder}}>5
                                 </Text>
-                            </TouchableOpacity>
+                            </View>
 
-                            <TouchableOpacity style={styles.location}
-                                onPress={() => navigation.navigate('Map')}>
+                            <View style={styles.location}>
                                 <Feather name="map-pin" size={24} color={theme.colors.placeholder} />
                                 <Text style={{
                                     ...styles.description,
                                     textDecorationLine: "underline"}}>Lviv
                                 </Text>
-                            </TouchableOpacity>
+                            </View>
                         </View>
                     </View>    
                 )} 

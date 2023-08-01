@@ -36,8 +36,6 @@ export default function CreateScreen({ navigation }) {
         navigation.navigate("Posts", { photo });
     }
 
-
-
     return (
         <View style={styles.container}>
             <Camera style={styles.camera} ref={setCamera}>
