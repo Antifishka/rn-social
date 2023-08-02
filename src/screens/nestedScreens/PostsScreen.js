@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         paddingTop: 32,
         paddingHorizontal: 16,
+        backgroundColor: theme.colors.white,
     },
     post: {
         width: "100%",

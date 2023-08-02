@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RegistrationScreen from "./screens/auth/RegistrationScreen";
@@ -12,7 +12,6 @@ import { theme } from "./constants/theme";
 // icons import
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -20,9 +19,9 @@ const MainTab = createBottomTabNavigator();
 export const useRoute = (isAuth) => {
     // Helper function to create a custom tab icon
     const createTabIcon = (name, focused, backgroundColor, color) => (
-    <View style={{ ...styles.iconWrapper, backgroundColor }}>
-        <Ionicons name={name} size={24} color={color} />
-    </View>
+        <View style={{ ...styles.iconWrapper, backgroundColor }}>
+            <Ionicons name={name} size={24} color={color} />
+        </View>
     );
 
     if (!isAuth) {
@@ -52,19 +51,14 @@ export const useRoute = (isAuth) => {
         <MainTab.Screen name='Home'
             component={HomeScreen}
             options={{
-                headerTitle: "Публікації",
+                headerShown: false,
                 tabBarIcon: ({ focused }) =>
                     createTabIcon(
                         "grid-outline",
                         focused,
                         focused ? theme.colors.accent : "transparent",
                         focused ? theme.colors.white : theme.colors.secondaryText
-                    ),    
-                headerRight: () => (
-                    <TouchableOpacity style={styles.iconLogout} activeOpacity={0.8} >
-                        <MaterialIcons name="logout" size={26} color={theme.colors.placeholder} />
-                    </TouchableOpacity>    
-                )           
+                    ),               
             }}
         />
         <MainTab.Screen name='Create'
@@ -117,9 +111,6 @@ const styles = StyleSheet.create({
         marginTop: 9,
         marginBottom: Platform.OS === 'android' ? 22 : 0,
         borderRadius: 20
-    },
-    iconLogout: {
-        marginRight: 10,
     },
     tabBar: {
         ...Platform.select({

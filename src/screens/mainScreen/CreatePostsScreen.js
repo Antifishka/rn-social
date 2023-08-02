@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from "expo-location";
 import { FontAwesome } from '@expo/vector-icons';
@@ -15,11 +15,10 @@ const initialState = {
 
 export default function CreateScreen({ navigation }) {
     const [camera, setCamera] = useState(null);
-    // const [photo, setPhoto] = useState('');
-    // const [location, setLocation] = useState({ latitude: '', longitude: '' });
-    // const [title, setTitle] = useState('');
-    // const [locationName, setLocationName] = useState('');
     const [state, setState] = useState(initialState);
+
+    const { photo, title, locationName } = state;
+    const disabled = photo && title && locationName;
 
     useEffect(() => {
         (async () => {
@@ -48,6 +47,10 @@ export default function CreateScreen({ navigation }) {
     };
 
     const sendData = () => {
+        if (!disabled) {
+            return Alert.alert('Waiting for missing fields');
+        }
+
         navigation.navigate("Posts", { postData: state });
 
         setState(initialState);
@@ -56,10 +59,6 @@ export default function CreateScreen({ navigation }) {
     const deleteData = () => {
         setState(initialState);
     }
-
-    const { photo, title, locationName } = state;
-
-    const disabled = photo && title && locationName;
 
     return (
         <View style={styles.container}>
