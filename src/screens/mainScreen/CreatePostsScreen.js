@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from "expo-location";
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 
+const initialState = {
+    photo: '',
+    title: '',
+    locationName: '',
+    location: { latitude: '', longitude: '' },
+};
+
 export default function CreateScreen({ navigation }) {
     const [camera, setCamera] = useState(null);
-    const [photo, setPhoto] = useState('');
+    // const [photo, setPhoto] = useState('');
+    // const [location, setLocation] = useState({ latitude: '', longitude: '' });
+    // const [title, setTitle] = useState('');
+    // const [locationName, setLocationName] = useState('');
+    const [state, setState] = useState(initialState);
 
     useEffect(() => {
         (async () => {
@@ -24,17 +35,31 @@ export default function CreateScreen({ navigation }) {
 
     const takePhoto = async () => {
         const photo = await camera.takePictureAsync();
-        setPhoto(photo.uri);
+        setState((prevState) => ({ ...prevState, photo: photo.uri }));
         console.log("photo", photo.uri);
 
         const location = await Location.getCurrentPositionAsync();
+        setState((prevState) => ({
+            ...prevState,
+            latitude: location.coords.latitude, longitude: location.coords.longitude
+        }));
         console.log("latitude", location.coords.latitude);
         console.log("longitude", location.coords.longitude);
     };
 
     const sendData = () => {
-        navigation.navigate("Posts", { photo });
+        navigation.navigate("Posts", { postData: state });
+
+        setState(initialState);
     }
+
+    const deleteData = () => {
+        setState(initialState);
+    }
+
+    const { photo, title, locationName } = state;
+
+    const disabled = photo && title && locationName;
 
     return (
         <View style={styles.container}>
@@ -59,35 +84,42 @@ export default function CreateScreen({ navigation }) {
                 style={styles.input}
                 placeholder="Назва..."
                 placeholderTextColor={theme.colors.placeholder}
-                // value={title}
-                // onFocus={()=> setIsShowKeyboard(true)}
-                // onChangeText={(value) =>
-                //     setState((prevState) => ({ ...prevState, name: value }))}
+                value={state.title}
+                onChangeText={(v) => setState((pS) => ({ ...pS, title: v }))}
             />
 
-            <TextInput
-                style={{
-                    ...styles.input,
-                    marginBottom:32, paddingLeft: 28 }}
-                placeholder="Місцевість..."
-                placeholderTextColor={theme.colors.placeholder}
-                // value={state.name}
-                // onFocus={()=> setIsShowKeyboard(true)}
-                // onChangeText={(value) =>
-                //     setState((prevState) => ({ ...prevState, name: value }))}
-            />
+            <View style={styles.inputWrapper}>
+                <TextInput
+                    style={{
+                        ...styles.input,
+                        marginBottom:32, paddingLeft: 28 }}
+                    placeholder="Місцевість..."
+                    placeholderTextColor={theme.colors.placeholder}
+                    value={state.locationName}
+                    onChangeText={(v) => setState((pS) => ({ ...pS, locationName: v }))} />
+                <Feather name="map-pin"
+                    size={22}
+                    color={theme.colors.placeholder}
+                    style={styles.locationIcon} />
+            </View>
             
             <TouchableOpacity
                 activeOpacity={0.8}
-                style={styles.sendBtn}
+                style={{
+                    ...styles.sendBtn,
+                    backgroundColor: disabled ? theme.colors.accent : theme.colors.background }}
                 onPress={sendData} >
-                <Text style={styles.sendBtnTitle}>Опубліковати</Text>
+                <Text style={{
+                    ...styles.sendBtnTitle,
+                    color: disabled ? theme.colors.white : theme.colors.placeholder }}>
+                    Опубліковати
+                </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.deleteBtn}
-                onPress={()=>{}} >
+                onPress={deleteData} >
                 <Feather name="trash-2" size={24} color={theme.colors.placeholder} />
             </TouchableOpacity>
         </View>
@@ -141,6 +173,9 @@ const styles = StyleSheet.create({
 
         color: theme.colors.placeholder,
     },
+    inputWrapper: {
+        position: "reletive",
+    },
     input: {
         marginBottom: 16,
         borderWidth: 0,
@@ -156,13 +191,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         height: 51,
         borderRadius: 100,
-        backgroundColor: theme.colors.background,
     },
     sendBtnTitle: {
         fontFamily: "Roboto-Regular",
         fontSize: 16,
         fontWeight: 400,
-        color: theme.colors.placeholder,
     },
     deleteBtn: {
         marginTop: "auto",
@@ -175,5 +208,10 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 20,
         backgroundColor: theme.colors.background,
-    }
+    },
+    locationIcon: {
+        position: "absolute",
+        top: 12,
+        left: 0,
+    },
 });

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 
-export default function PostsScreen({ route }) {
+export default function PostsScreen({ route, navigation }) {
     const [posts, setPosts] = useState([]);
     console.log("route.params", route.params);
 
     useEffect(() => {
         if (route.params) {
-            setPosts((prevState) => [...prevState, route.params]);
+            setPosts((prevState) => [...prevState, route.params.postData]);
         }
     }, [route.params]);
     console.log("posts", posts); 
@@ -26,26 +26,28 @@ export default function PostsScreen({ route }) {
                                 alt='picture' />
                         </View> 
 
-                        <Text style={styles.title}>Ліс</Text>
+                        <Text style={styles.title}>{item.title}</Text>
 
                         <View style={styles.postInfo}>
-                            <View style={styles.comments}>
+                            <TouchableOpacity style={styles.comments}
+                                onPress={() => navigation.navigate('Comments')}>
                                 <Feather name="message-circle" size={24}
                                     color={theme.colors.placeholder}
                                     />
                                 <Text style={{
                                     ...styles.description,
-                                    color: theme.colors.placeholder}}>5
+                                    color: theme.colors.placeholder}}>0
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
 
-                            <View style={styles.location}>
+                            <TouchableOpacity style={styles.location}
+                                onPress={() => navigation.navigate('Map')}>
                                 <Feather name="map-pin" size={24} color={theme.colors.placeholder} />
                                 <Text style={{
                                     ...styles.description,
-                                    textDecorationLine: "underline"}}>Lviv
+                                    textDecorationLine: "underline"}}>{item.locationName}
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
                         </View>
                     </View>    
                 )} 

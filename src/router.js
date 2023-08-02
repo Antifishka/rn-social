@@ -18,6 +18,13 @@ const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
 export const useRoute = (isAuth) => {
+    // Helper function to create a custom tab icon
+    const createTabIcon = (name, focused, backgroundColor, color) => (
+    <View style={{ ...styles.iconWrapper, backgroundColor }}>
+        <Ionicons name={name} size={24} color={color} />
+    </View>
+    );
+
     if (!isAuth) {
         return <AuthStack.Navigator>
             <AuthStack.Screen
@@ -46,19 +53,13 @@ export const useRoute = (isAuth) => {
             component={HomeScreen}
             options={{
                 headerTitle: "Публікації",
-                tabBarIcon: ({ focused }) => (
-                    <View style={{...styles.iconWrapper,
-                        backgroundColor: focused
-                            ? `${theme.colors.accent}`
-                            : "transparent"}} >
-                        <Ionicons name="grid-outline"
-                            size={24}
-                            color={ focused
-                                ? `${theme.colors.white}`
-                                : `${theme.colors.secondaryText}`
-                            } />
-                    </View>    
-                ),
+                tabBarIcon: ({ focused }) =>
+                    createTabIcon(
+                        "grid-outline",
+                        focused,
+                        focused ? theme.colors.accent : "transparent",
+                        focused ? theme.colors.white : theme.colors.secondaryText
+                    ),    
                 headerRight: () => (
                     <TouchableOpacity style={styles.iconLogout} activeOpacity={0.8} >
                         <MaterialIcons name="logout" size={26} color={theme.colors.placeholder} />
@@ -70,19 +71,13 @@ export const useRoute = (isAuth) => {
             component={CreateScreen}
             options={{
                 headerTitle: "Створити публікацію",
-                tabBarIcon: ({ focused }) => (
-                    <View style={{...styles.iconWrapper,
-                        backgroundColor: focused
-                            ? `${theme.colors.accent}`
-                            : "transparent"}} >
-                        <Ionicons name="add-outline"
-                            size={24}
-                            color={ focused
-                                ? `${theme.colors.white}`
-                                : `${theme.colors.secondaryText}`
-                            } />
-                    </View>
-                )
+                tabBarIcon: ({ focused }) => 
+                    createTabIcon(
+                        "add-outline",
+                        focused,
+                        focused ? theme.colors.accent : "transparent",
+                        focused ? theme.colors.white : theme.colors.secondaryText
+                    ),
             }}
         />
         <MainTab.Screen name='Profile'

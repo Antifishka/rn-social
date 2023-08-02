@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Button } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 
 export default function PostsScreen({ route, navigation }) {
     const [posts, setPosts] = useState([]);
     console.log("route.params", route.params);
+
+    console.log("navigation", navigation);
 
     useEffect(() => {
         if (route.params) {
@@ -29,25 +32,24 @@ export default function PostsScreen({ route, navigation }) {
                         <Text style={styles.title}>Ліс</Text>
 
                         <View style={styles.postInfo}>
-                            <TouchableOpacity style={styles.comments}
+                            <Button style={styles.comments}
                                 onPress={() => navigation.navigate('Comments')}>
                                 <Feather name="message-circle" size={24}
-                                    color={theme.colors.placeholder}
-                                    />
+                                    color={theme.colors.placeholder} />
                                 <Text style={{
                                     ...styles.description,
-                                    color: theme.colors.placeholder}}>5
+                                    color: theme.colors.placeholder}}>3
                                 </Text>
-                            </TouchableOpacity>
+                            </Button>
 
-                            <TouchableOpacity style={styles.location}
+                            <Button style={styles.location}
                                 onPress={() => navigation.navigate('Map')}>
                                 <Feather name="map-pin" size={24} color={theme.colors.placeholder} />
                                 <Text style={{
                                     ...styles.description,
                                     textDecorationLine: "underline"}}>Lviv
                                 </Text>
-                            </TouchableOpacity>
+                            </Button>
                         </View>
                     </View>    
                 )} 
