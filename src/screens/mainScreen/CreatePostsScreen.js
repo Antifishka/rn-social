@@ -10,7 +10,8 @@ const initialState = {
     photo: '',
     title: '',
     locationName: '',
-    location: { latitude: '', longitude: '' },
+    latitude: '',
+    longitude: '',
 };
 
 export default function CreateScreen({ navigation }) {

@@ -41,7 +41,12 @@ export default function PostsScreen({ route, navigation }) {
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.location}
-                                onPress={() => navigation.navigate('Map')}>
+                                onPress={() => navigation.navigate('Map',
+                                    {
+                                        latitude: item.latitude,
+                                        longitude: item.longitude,
+                                        title: item.title,
+                                    })}>
                                 <Feather name="map-pin" size={24} color={theme.colors.placeholder} />
                                 <Text style={{
                                     ...styles.description,
