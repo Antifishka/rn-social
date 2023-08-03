@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { UserCard } from '../../components/UserCard';
+import { PostCard } from '../../components/PostCard';
 import { theme } from '../../constants/theme';
 
-export default function PostsScreen({ route, navigation }) {
+export default function PostsScreen({ route }) {
     const [posts, setPosts] = useState([]);
     console.log("route.params", route.params);
 
@@ -16,45 +17,17 @@ export default function PostsScreen({ route, navigation }) {
 
     return (
         <View style={styles.container}>
+            <UserCard />
+            
             <FlatList data={posts}
                 keyExtractor={(item, idx) => idx.toString()}
                 renderItem={({ item }) => (
-                    <View style={styles.post}>
-                        <View style={styles.imgThumb}>
-                            <Image source={{ uri: item.photo }}
-                                style={{ height: 240 }}
-                                alt='picture' />
-                        </View> 
-
-                        <Text style={styles.title}>{item.title}</Text>
-
-                        <View style={styles.postInfo}>
-                            <TouchableOpacity style={styles.comments}
-                                onPress={() => navigation.navigate('Comments')}>
-                                <Feather name="message-circle" size={24}
-                                    color={theme.colors.placeholder}
-                                    />
-                                <Text style={{
-                                    ...styles.description,
-                                    color: theme.colors.placeholder}}>0
-                                </Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.location}
-                                onPress={() => navigation.navigate('Map',
-                                    {
-                                        latitude: item.latitude,
-                                        longitude: item.longitude,
-                                        title: item.title,
-                                    })}>
-                                <Feather name="map-pin" size={24} color={theme.colors.placeholder} />
-                                <Text style={{
-                                    ...styles.description,
-                                    textDecorationLine: "underline"}}>{item.locationName}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>    
+                    <PostCard
+                        photo={item.photo}
+                        title={item.title}
+                        latitude={item.latitude}
+                        longitude={item.longitude}
+                        locationName={item.locationName} />
                 )} 
             />
         </View>
@@ -69,41 +42,4 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         backgroundColor: theme.colors.white,
     },
-    post: {
-        width: "100%",
-        height: 299,
-        marginBottom: 32,
-    },
-    imgThumb: {
-        overflow: "hidden",
-        flex: 1,
-        marginBottom: 8,
-        borderRadius: 8
-    },
-    title: {
-        marginBottom: 8,
-        fontFamily: "Roboto-Medium",
-        fontSize: 16,
-        color: theme.colors.mainText,
-    },
-    postInfo: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    comments: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 4,
-    },
-    location: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginLeft: "auto",
-        gap: 4,
-    },
-    description: {
-        fontFamily: "Roboto-Regular",
-        fontSize: 16,
-        color: theme.colors.mainText,
-    }
 });
