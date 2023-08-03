@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from "expo-location";
-import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
+import { MyCamera } from '../../components/MyCamera';
 
 const initialState = {
     photo: '',
@@ -24,7 +24,7 @@ export default function CreateScreen({ navigation }) {
     useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
-            console.log("status", status);
+            console.log("status location", status);
 
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
@@ -32,6 +32,18 @@ export default function CreateScreen({ navigation }) {
             }
         })();
     }, []);
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            console.log("status camera", status);
+
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access camera was denied');
+                return;
+            }
+        })();
+    }, []); 
 
     const takePhoto = async () => {
         const photo = await camera.takePictureAsync();
@@ -63,20 +75,10 @@ export default function CreateScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} ref={setCamera}>
-                <TouchableOpacity onPress={takePhoto}
-                    style={{...styles.cameraBtn,
-                        backgroundColor: photo ? 'rgba(255, 255, 255, 0.3)' :  theme.colors.white }}>
-                    <FontAwesome name="camera" size={24}
-                        color={photo ? theme.colors.white : theme.colors.placeholder} />
-                </TouchableOpacity>
-            </Camera>
-
-            {photo && <View style={styles.previewContainer}>
-                <Image source={{ uri: photo }}
-                    alt='preview'
-                    style={styles.previewImg} />
-            </View>}
+            <MyCamera
+                setCamera={setCamera}
+                onClickSnap={takePhoto}
+                photo={photo} />
 
             <Text style={styles.text}>{photo ? 'Редагувати фото' : 'Завантажте фото'}</Text>
 
@@ -131,39 +133,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 16,
         backgroundColor: theme.colors.white,
-    },
-    camera: {
-        overflow: "hidden",
-        position: "relative",
-        justifyContent: "center",
-        alignItems: "center",
-        height: 240,
-        marginTop: 32,
-        marginBottom: 8,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: theme.colors.border,
-
-        backgroundColor: "#F6F6F6",
-    },
-    cameraBtn: {
-        justifyContent: "center",
-        alignItems: "center",
-        width: 60,
-        height: 60,
-        borderRadius: 50,
-    },
-    previewContainer: {
-        overflow: "hidden",
-        position: "absolute",
-        flex: 1,
-        borderRadius: 8,
-        top: 0,
-        left: 0,
-    },
-    previewImg: {
-        height: 240, 
-        resizeMode: 'cover',
     },
     text: {
         marginBottom: 32,

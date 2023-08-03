@@ -48,12 +48,6 @@ export const PostCard = ({ photo, title, latitude, longitude, locationName }) =>
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-        marginBottom: 32,
-    },
     post: {
         width: "100%",
         height: 299,
