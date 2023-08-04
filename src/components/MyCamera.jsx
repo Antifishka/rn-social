@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: theme.colors.border,
-        backgroundColor: "#F6F6F6",
+        backgroundColor: theme.colors.background,
     },
     cameraBtn: {
         justifyContent: "center",

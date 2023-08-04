@@ -3,10 +3,12 @@ import { Platform } from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from '@react-navigation/native';
 import { useRoute } from "./src/router";
+import { Provider } from "react-redux";
+import { store } from "./src/redux/store";
 
 export default function App() {
   console.log(Platform.OS);
-  const routing = useRoute({});
+  const routing = useRoute(null);
   
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
@@ -26,7 +28,9 @@ export default function App() {
     //       source={require("./assets/images/bg.jpg")}>
     //       <KeyboardAvoidingView
     //         behavior={Platform.OS == "ios" ? "padding" : "height"}>
-    <NavigationContainer>{routing}</NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>{routing}</NavigationContainer>
+    </Provider>
     //       </KeyboardAvoidingView>  
     //     </ImageBackground>
     //   </View>

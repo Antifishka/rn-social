@@ -27,7 +27,7 @@ export default function CreateScreen({ navigation }) {
             console.log("status location", status);
 
             if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
+                console.log("Permission to access location was denied");
                 return;
             }
         })();
@@ -39,7 +39,7 @@ export default function CreateScreen({ navigation }) {
             console.log("status camera", status);
 
             if (status !== 'granted') {
-                setErrorMsg('Permission to access camera was denied');
+                console.log('Permission to access camera was denied');
                 return;
             }
         })();
