@@ -1,8 +1,9 @@
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { updateUserProfile, authStateChange, authSignOut } from "./auth-reducer";
@@ -11,9 +12,7 @@ export const authSingUpUser = ({ email, password, nickname }) => async(dispatch)
     try {
         await createUserWithEmailAndPassword(auth, email, password); 
 
-        const user = await auth.currentUser;
-
-        await user.updateProfile({
+        await updateProfile(auth.currentUser, {
             displayName: nickname
         })
 
@@ -26,41 +25,42 @@ export const authSingUpUser = ({ email, password, nickname }) => async(dispatch)
         }));
 
     } catch (error) {
+        console.log('error', error);
         console.log('error.message', error.message);
     }
 };
  
-export const authSingInUser = ({ email, password }) => async(dispatch, getState) => { 
-    try {
-        const user = await db
-            .auth()
-            .signInWithEmailAndPassword(email, password); 
+// export const authSingInUser = ({ email, password }) => async(dispatch, getState) => { 
+//     try {
+//         const user = await db
+//             .auth()
+//             .signInWithEmailAndPassword(email, password); 
 
-        console.log('user', user);
+//         console.log('user', user);
 
       
 
-    } catch (error) {
-        console.log('error.message)', error.message);
-    } 
-};
+//     } catch (error) {
+//         console.log('error.message)', error.message);
+//     } 
+// };
 
-export const authSingOutUser = () => async (dispatch, getState) => { 
-    await db.auth().signOut();
+// export const authSingOutUser = () => async (dispatch, getState) => { 
+//     await db.auth().signOut();
 
-    dispatch(authSignOut());
-};
+//     dispatch(authSignOut());
+// };
 
-export const authStateChangeUser = () => async (dispatch, getState) => { 
-    await db.auth().onAuthStateChanged((user) => {
-        if (user) {
-            const newUser = {
-                nickname: user.displayName,
-                userId: user.uid,
-            }
+// export const authStateChangeUser = () => async (dispatch, getState) => { 
+//     await db.auth().onAuthStateChanged((user) => {
+//         if (user) {
+//             const newUser = {
+//                 nickname: user.displayName,
+//                 userId: user.uid,
+//             }
 
-            dispatch(authStateChange({ stateChange: true }));
-            dispatch(updateUserProfile(newUser));
-        }
-    }); 
-};
+//             dispatch(authStateChange({ stateChange: true }));
+//             dispatch(updateUserProfile(newUser));
+//         }
+//     }); 
+// };
