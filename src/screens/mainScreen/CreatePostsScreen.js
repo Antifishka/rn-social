@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from "expo-location";
+import db from '../../firebase/config';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 import { MyCamera } from '../../components/MyCamera';
@@ -59,10 +60,21 @@ export default function CreateScreen({ navigation }) {
         console.log("longitude", location.coords.longitude);
     };
 
+    const uploadPhotoToServer = async () => {
+        const response = await fetch(photo);
+        const file = await response.blob();
+
+        const uniquePostId = Date.now().toString();
+        
+        const data = await db.storage().ref(`postImage/${uniquePostId}`).put(file);
+        console.log('data', data);
+    }
+
     const sendData = () => {
         if (!disabled) {
             return Alert.alert('Waiting for missing fields');
         }
+        uploadPhotoToServer();
 
         navigation.navigate("Posts", { postData: state });
 

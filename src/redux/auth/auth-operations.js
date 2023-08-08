@@ -1,26 +1,32 @@
-import db from "../../firebase/config";
-import { authSlice } from "./auth-reducer";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../../firebase/config";
+import { updateUserProfile, authStateChange, authSignOut } from "./auth-reducer";
 
 export const authSingUpUser = ({ email, password, nickname }) => async(dispatch) => {
     try {
-        await db.auth().createUserWithEmailAndPassword(email, password); 
+        await createUserWithEmailAndPassword(auth, email, password); 
 
-        const user = await db.auth().currentUser;
+        const user = await auth.currentUser;
 
         await user.updateProfile({
             displayName: nickname
         })
 
-        const { uid, displayName } = await db.auth().currentUser;
+        const { uid, displayName } = await auth.currentUser;
         console.log('uid, displayName', uid, displayName);
 
-        dispatch(authSlice.actions.updateUserProfile({
+        dispatch(updateUserProfile({
             userId: uid,
             nickname: displayName,
         }));
 
     } catch (error) {
-        console.log('error.message)', error.message);
+        console.log('error.message', error.message);
     }
 };
  
@@ -39,8 +45,22 @@ export const authSingInUser = ({ email, password }) => async(dispatch, getState)
     } 
 };
 
-export const authSingOutUser = () => (dispatch, getState) => { };
+export const authSingOutUser = () => async (dispatch, getState) => { 
+    await db.auth().signOut();
+
+    dispatch(authSignOut());
+};
 
 export const authStateChangeUser = () => async (dispatch, getState) => { 
-    await db.auth().onAuthStateChanged((user) => setUser(user)); 
+    await db.auth().onAuthStateChanged((user) => {
+        if (user) {
+            const newUser = {
+                nickname: user.displayName,
+                userId: user.uid,
+            }
+
+            dispatch(authStateChange({ stateChange: true }));
+            dispatch(updateUserProfile(newUser));
+        }
+    }); 
 };

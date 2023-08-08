@@ -1,6 +1,8 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { authSingOutUser } from "../../redux/auth/auth-operations";
 import PostsScreen from '../nestedScreens/PostsScreen';
 import CommentsScreen from '../nestedScreens/CommentsScreen';
 import MapScreen from '../nestedScreens/MapScreen';
@@ -10,6 +12,12 @@ import { theme } from "../../constants/theme";
 const NestedScreen = createStackNavigator();
 
 const HomeScreen = () => {
+    const dispatch = useDispatch();
+
+    const singOut = () => {
+        dispatch(authSingOutUser());
+    }
+
     return (
         <NestedScreen.Navigator
             screenOptions={{
@@ -21,7 +29,10 @@ const HomeScreen = () => {
                 options={{
                     headerTitle: "Публікації",
                     headerRight: () => (
-                        <TouchableOpacity style={styles.iconLogout} activeOpacity={0.8} >
+                        <TouchableOpacity
+                            style={styles.iconLogout}
+                            activeOpacity={0.8}
+                            onPress={singOut} >
                             <MaterialIcons name="logout" size={26} color={theme.colors.placeholder} />
                         </TouchableOpacity>    
                     )
