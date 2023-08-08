@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -11,6 +12,7 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
 } from "react-native";
+import { authSingInUser } from "../../redux/auth/auth-operations";
 import { theme } from "../../constants/theme";
 
 const initialState = {
@@ -22,6 +24,7 @@ export default function LoginScreen({ navigation }) {
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false); 
+  const dispatch = useDispatch();
   
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -29,10 +32,12 @@ export default function LoginScreen({ navigation }) {
     Keyboard.dismiss();
   };
 
-  const onSubmit = () => {
+  const handleSubmit = () => {
     keyboardHide();
 
-    console.log(state);
+    dispatch(authSingInUser(state));
+    console.log('submit', state);
+    
     setState(initialState);
   };
 
@@ -87,7 +92,7 @@ export default function LoginScreen({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       style={styles.btn}
-                      onPress={onSubmit}>
+                      onPress={handleSubmit}>
                       <Text style={styles.btnTitle}>Увійти</Text>
                     </TouchableOpacity>
                     
