@@ -66,15 +66,14 @@ export default function RegistrationScreen({ navigation }) {
                     source={require("../../../assets/images/bg.jpg")}>
                     <KeyboardAvoidingView
                         behavior={Platform.OS == "ios" ? "padding" : "height"}> 
-                        <View
-                        style={{
+                        <View style={{
                             ...styles.form,
                             paddingBottom: isShowKeyboard ? 32 : 45,
                         }}>
                         <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
                             <TouchableOpacity style={styles.avatarBtn}>
-                                <Ionicons name="add-outline"
-                                    size={21}
+                                <Ionicons name="add"
+                                    size={20}    
                                     color={theme.colors.accent} />
                                 </TouchableOpacity>
                         </View>
@@ -177,7 +176,7 @@ const styles = StyleSheet.create({
         height: 25,
         borderRadius: 50,
         borderWidth: 1,
-        borderColor: "#FF6C00",
+        borderColor: theme.colors.accent,
     },
     formTitle: {
         marginBottom: 33,

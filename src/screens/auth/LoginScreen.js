@@ -49,10 +49,9 @@ export default function LoginScreen({ navigation }) {
           source={require("../../../assets/images/bg.jpg")}>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}> 
-            <View
-              style={{
-              ...styles.form,
-              paddingBottom: isShowKeyboard ? 32 : 111,
+            <View style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 111,
               }}>
               <Text style={styles.formTitle}>Увійти</Text>
                 

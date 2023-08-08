@@ -8,7 +8,7 @@ import {
 import { auth } from "../../firebase/config";
 import { updateUserProfile, authStateChange, authSignOut } from "./auth-reducer";
 
-export const authSingUpUser = ({ email, password, nickname }) => async(dispatch) => {
+export const authSingUpUser = ({ email, password, nickname }) => async (dispatch) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password); 
 
@@ -30,37 +30,30 @@ export const authSingUpUser = ({ email, password, nickname }) => async(dispatch)
     }
 };
  
-// export const authSingInUser = ({ email, password }) => async(dispatch, getState) => { 
-//     try {
-//         const user = await db
-//             .auth()
-//             .signInWithEmailAndPassword(email, password); 
+export const authSingInUser = ({ email, password }) => async () => { 
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+        console.log('error.message)', error.message);
+    } 
+};
 
-//         console.log('user', user);
+export const authSingOutUser = () => async (dispatch) => { 
+    await signOut(auth);
 
-      
+    dispatch(authSignOut());
+};
 
-//     } catch (error) {
-//         console.log('error.message)', error.message);
-//     } 
-// };
+export const authStateChangeUser = () => async (dispatch) => { 
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const newUser = {
+                nickname: user.displayName,
+                userId: user.uid,
+            }
 
-// export const authSingOutUser = () => async (dispatch, getState) => { 
-//     await db.auth().signOut();
-
-//     dispatch(authSignOut());
-// };
-
-// export const authStateChangeUser = () => async (dispatch, getState) => { 
-//     await db.auth().onAuthStateChanged((user) => {
-//         if (user) {
-//             const newUser = {
-//                 nickname: user.displayName,
-//                 userId: user.uid,
-//             }
-
-//             dispatch(authStateChange({ stateChange: true }));
-//             dispatch(updateUserProfile(newUser));
-//         }
-//     }); 
-// };
+            dispatch(authStateChange({ stateChange: true }));
+            dispatch(updateUserProfile(newUser));
+        }
+    }); 
+};
