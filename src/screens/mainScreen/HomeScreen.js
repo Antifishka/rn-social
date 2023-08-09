@@ -40,7 +40,8 @@ const HomeScreen = () => {
             <NestedScreen.Screen name='Comments'
                 component={CommentsScreen}
                 options={{
-                    headerTitle: "Коментарі"
+                    headerTitle: "Коментарі",
+                    tabBarStyle: { display: "none" },
                 }}/>
             <NestedScreen.Screen name='Map'
                 component={MapScreen}

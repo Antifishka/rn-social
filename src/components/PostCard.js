@@ -1,5 +1,6 @@
 import React from "react";
-import { Image, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Photo } from "./Photo";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
@@ -9,17 +10,13 @@ export const PostCard = ({ photo, title, latitude, longitude, locationName }) =>
 
     return (
         <View style={styles.post}>
-            <View style={styles.imgThumb}>
-                <Image source={{ uri: photo }}
-                    style={{ height: 240 }}
-                            alt='travel photo' />
-            </View> 
+            <Photo photo={photo} />
 
             <Text style={styles.title}>{title}</Text>
 
             <View style={styles.postInfo}>
                 <TouchableOpacity style={styles.comments}
-                    onPress={() => navigation.navigate('Comments')}>
+                    onPress={() => navigation.navigate('Comments', { photo })}>
                     <Feather name="message-circle"
                         size={24}
                         color={theme.colors.placeholder}/>
@@ -52,12 +49,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 299,
         marginBottom: 32,
-    },
-    imgThumb: {
-        overflow: "hidden",
-        flex: 1,
-        marginBottom: 8,
-        borderRadius: 8
     },
     title: {
         marginBottom: 8,

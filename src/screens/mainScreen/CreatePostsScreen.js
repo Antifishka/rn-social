@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { Camera } from 'expo-camera';
+import {
+    TouchableWithoutFeedback,
+    View,
+    Text,
+    StyleSheet,
+    Keyboard,
+    TouchableOpacity,
+    TextInput,
+    Alert
+} from 'react-native';
 import * as Location from "expo-location";
-import db from '../../firebase/config';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from '../../firebase/config';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 import { MyCamera } from '../../components/MyCamera';
@@ -18,6 +27,7 @@ const initialState = {
 export default function CreateScreen({ navigation }) {
     const [camera, setCamera] = useState(null);
     const [state, setState] = useState(initialState);
+    const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
     const { photo, title, locationName } = state;
     const disabled = photo && title && locationName;
@@ -34,17 +44,22 @@ export default function CreateScreen({ navigation }) {
         })();
     }, []);
 
-    useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync();
-            console.log("status camera", status);
+    // useEffect(() => {
+    //     (async () => {
+    //         const { status } = await Camera.requestCameraPermissionsAsync();
+    //         console.log("status camera", status);
 
-            if (status !== 'granted') {
-                console.log('Permission to access camera was denied');
-                return;
-            }
-        })();
-    }, []); 
+    //         if (status !== 'granted') {
+    //             console.log('Permission to access camera was denied');
+    //             return;
+    //         }
+    //     })();
+    // }, []);
+
+    const keyboardHide = () => {
+        setIsShowKeyboard(false);
+        Keyboard.dismiss();
+    };
 
     const takePhoto = async () => {
         const photo = await camera.takePictureAsync();
@@ -62,12 +77,16 @@ export default function CreateScreen({ navigation }) {
 
     const uploadPhotoToServer = async () => {
         const response = await fetch(photo);
-        const file = await response.blob();
+        const file = await response.blob(); // change format to Blob
 
-        const uniquePostId = Date.now().toString();
+        const imageId = Date.now().toString();
+
+        const imageRef = ref(storage, `postImages/${imageId}`);
+
+        await uploadBytes(imageRef, file); // upload image
         
-        const data = await db.storage().ref(`postImage/${uniquePostId}`).put(file);
-        console.log('data', data);
+        const imageURL = await getDownloadURL(imageRef); // get image URL
+        console.log('imageURL', imageURL);
     }
 
     const sendData = () => {
@@ -86,57 +105,63 @@ export default function CreateScreen({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
-            <MyCamera
-                setCamera={setCamera}
-                onClickSnap={takePhoto}
-                photo={photo} />
+        <TouchableWithoutFeedback onPress={keyboardHide}>
+            <View style={styles.container}>
+                <MyCamera
+                    setCamera={setCamera}
+                    onClickSnap={takePhoto}
+                    photo={photo} />
 
-            <Text style={styles.text}>{photo ? 'Редагувати фото' : 'Завантажте фото'}</Text>
-
-            <TextInput
-                style={styles.input}
-                placeholder="Назва..."
-                placeholderTextColor={theme.colors.placeholder}
-                value={state.title}
-                onChangeText={(v) => setState((pS) => ({ ...pS, title: v }))}
-            />
-
-            <View style={styles.inputWrapper}>
-                <TextInput
-                    style={{
-                        ...styles.input,
-                        marginBottom:32, paddingLeft: 28 }}
-                    placeholder="Місцевість..."
-                    placeholderTextColor={theme.colors.placeholder}
-                    value={state.locationName}
-                    onChangeText={(v) => setState((pS) => ({ ...pS, locationName: v }))} />
-                <Feather name="map-pin"
-                    size={22}
-                    color={theme.colors.placeholder}
-                    style={styles.locationIcon} />
-            </View>
-            
-            <TouchableOpacity
-                activeOpacity={0.8}
-                style={{
-                    ...styles.sendBtn,
-                    backgroundColor: disabled ? theme.colors.accent : theme.colors.background }}
-                onPress={sendData} >
-                <Text style={{
-                    ...styles.sendBtnTitle,
-                    color: disabled ? theme.colors.white : theme.colors.placeholder }}>
-                    Опубліковати
+                <Text style={{ ...styles.text, marginBottom: isShowKeyboard ? 2 : 48 }}>
+                    {photo ? 'Редагувати фото' : 'Завантажте фото'}
                 </Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.deleteBtn}
-                onPress={deleteData} >
-                <Feather name="trash-2" size={24} color={theme.colors.placeholder} />
-            </TouchableOpacity>
-        </View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Назва..."
+                    placeholderTextColor={theme.colors.placeholder}
+                    value={state.title}
+                    onFocus={()=> setIsShowKeyboard(true)}
+                    onChangeText={(v) => setState((pS) => ({ ...pS, title: v }))}
+                />
+
+                <View style={styles.inputWrapper}>
+                    <TextInput
+                        style={{
+                            ...styles.input,
+                            marginBottom:32, paddingLeft: 28 }}
+                        placeholder="Місцевість..."
+                        placeholderTextColor={theme.colors.placeholder}
+                        value={state.locationName}
+                        onFocus={()=> setIsShowKeyboard(true)}
+                        onChangeText={(v) => setState((pS) => ({ ...pS, locationName: v }))} />
+                    <Feather name="map-pin"
+                        size={22}
+                        color={theme.colors.placeholder}
+                        style={styles.locationIcon} />
+                </View>
+                
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{
+                        ...styles.sendBtn,
+                        backgroundColor: disabled ? theme.colors.accent : theme.colors.background }}
+                    onPress={sendData} >
+                    <Text style={{
+                        ...styles.sendBtnTitle,
+                        color: disabled ? theme.colors.white : theme.colors.placeholder }}>
+                        Опубліковати
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.deleteBtn}
+                    onPress={deleteData} >
+                    <Feather name="trash-2" size={24} color={theme.colors.placeholder} />
+                </TouchableOpacity>
+            </View>
+        </TouchableWithoutFeedback>    
     )    
 };
 
@@ -147,7 +172,6 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.white,
     },
     text: {
-        marginBottom: 32,
         fontFamily: "Roboto-Regular",
         fontSize: 16,
         fontWeight: 400,
@@ -155,13 +179,13 @@ const styles = StyleSheet.create({
         color: theme.colors.placeholder,
     },
     inputWrapper: {
-        position: "reletive",
+        position: "relative",
     },
     input: {
         marginBottom: 16,
         borderWidth: 0,
         borderBottomWidth: 1,
-        borderColor: "#E8E8E8",
+        borderColor: theme.colors.border,
         height: 50,
         fontFamily: "Roboto-Regular",
         fontSize: 16,
