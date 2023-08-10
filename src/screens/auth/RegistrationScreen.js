@@ -8,12 +8,9 @@ import {
     TouchableOpacity, 
     Dimensions,
     Keyboard,
-    Platform,
-    TouchableWithoutFeedback,
-    KeyboardAvoidingView,
-    ImageBackground,
 } from "react-native";
 import { authSingUpUser } from "../../redux/auth/auth-operations";
+import { Container } from "../../components/Container";
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from "../../constants/theme";
 
@@ -60,65 +57,61 @@ export default function RegistrationScreen({ navigation }) {
     };
 
     return (
-        <TouchableWithoutFeedback onPress={keyboardHide}>
-            <View style={styles.container}>
-                <ImageBackground style={styles.imageBg}
-                    source={require("../../../assets/images/bg.jpg")}>
-                    <KeyboardAvoidingView
-                        behavior={Platform.OS == "ios" ? "padding" : "height"}> 
-                        <View style={{
-                            ...styles.form,
-                            paddingBottom: isShowKeyboard ? 32 : 45,
-                        }}>
-                        <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
-                            <TouchableOpacity style={styles.avatarBtn}>
-                                <Ionicons name="add"
-                                    size={20}    
-                                    color={theme.colors.accent} />
-                                </TouchableOpacity>
-                        </View>
+        <Container onClick={keyboardHide}>
+            <View style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 45,
+            }}>
+                <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
+                    <TouchableOpacity style={styles.avatarBtn}>
+                        <Ionicons name="add"
+                            size={20}    
+                            color={theme.colors.accent} />
+                    </TouchableOpacity>
+                </View>
                                 
-                        <Text style={styles.formTitle}>Реєстрація</Text>
+                <Text style={styles.formTitle}>Реєстрація</Text>
 
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Логін"
-                            placeholderTextColor={theme.colors.placeholder}
-                            value={state.nickname}
-                            onFocus={()=> setIsShowKeyboard(true)}
-                            onChangeText={(value) =>
-                                setState((prevState) => ({ ...prevState, nickname: value }))} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Логін"
+                    placeholderTextColor={theme.colors.placeholder}
+                    value={state.nickname}
+                    onFocus={()=> setIsShowKeyboard(true)}
+                    onChangeText={(value) =>
+                        setState((prevState) => ({ ...prevState, nickname: value }))} />
                                 
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Адреса електронної пошти"
-                            placeholderTextColor={theme.colors.placeholder}
-                            onFocus={()=> setIsShowKeyboard(true)}
-                            value={state.email}
-                            onChangeText={(value) =>
-                                setState((prevState) => ({ ...prevState, email: value }))} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Адреса електронної пошти"
+                    placeholderTextColor={theme.colors.placeholder}
+                    onFocus={()=> setIsShowKeyboard(true)}
+                    value={state.email}
+                    onChangeText={(value) =>
+                        setState((prevState) => ({ ...prevState, email: value }))} />
                                 
-                        <View>
-                            <TextInput
-                            style={{
-                                ...styles.input,
-                                marginBottom: isShowKeyboard ? 0 : 43,
-                                position: "relative"
-                            }}
-                            placeholder="Пароль"
-                            placeholderTextColor={theme.colors.placeholder}
-                            value={state.password}
-                            secureTextEntry={!isShowPassword}
-                            onFocus={()=> setIsShowKeyboard(true)}
-                            onChangeText={(value) =>
-                                setState((prevState) => ({ ...prevState, password: value }))} />
-                            <Text style={styles.inputBtn}
-                                onPress={() => setIsShowPassword(!isShowPassword)}>Показати
-                            </Text>
-                        </View>  
+                <View>
+                    <TextInput
+                        style={{
+                            ...styles.input,
+                            marginBottom: isShowKeyboard ? 0 : 43,
+                            position: "relative"
+                        }}
+                        placeholder="Пароль"
+                        placeholderTextColor={theme.colors.placeholder}
+                        value={state.password}
+                        secureTextEntry={!isShowPassword}
+                        onFocus={()=> setIsShowKeyboard(true)}
+                        onChangeText={(value) =>
+                            setState((prevState) => ({ ...prevState, password: value }))} />
+                    
+                        <Text style={styles.inputBtn}
+                            onPress={() => setIsShowPassword(!isShowPassword)}>Показати
+                        </Text>
+                    </View>  
 
-                        {!isShowKeyboard && 
-                            <>
+                    {!isShowKeyboard && 
+                        <>
                             <TouchableOpacity
                                 activeOpacity={0.8}
                                 style={styles.btn}
@@ -127,29 +120,17 @@ export default function RegistrationScreen({ navigation }) {
                             </TouchableOpacity>
                                     
                             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                                    <Text style={styles.text}>
-                                        Вже є акаунт? Увійти
-                                    </Text>
-                                </TouchableOpacity>
-                            </>}
-                        </View> 
-                    </KeyboardAvoidingView>  
-                </ImageBackground>
-            </View>
-        </TouchableWithoutFeedback>                 
+                                <Text style={styles.text}>
+                                    Вже є акаунт? Увійти
+                                </Text>
+                            </TouchableOpacity>
+                        </>}
+            </View> 
+        </Container>                       
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    imageBg: {
-        flex: 1,
-        resizeMode: "cover",
-        justifyContent: "flex-end",
-    },
     form: {
         position: "relative",
         paddingTop: 92,
