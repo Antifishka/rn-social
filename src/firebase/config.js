@@ -4,18 +4,17 @@ import {
   getReactNativePersistence,
 } from "firebase/auth/react-native";
 import { initializeApp } from "firebase/app";
-
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB9cTm1E6xaxuw1kyJ4o4koGcd32MdmMcc",
-  authDomain: "rn-social-5e825.firebaseapp.com",
-  projectId: "rn-social-5e825",
-  storageBucket: "rn-social-5e825.appspot.com",
-  messagingSenderId: "775165926587",
-  appId: "1:775165926587:web:6d4d8c77e5d7dc818e1d9e",
-  measurementId: "G-86J1Q21Y59"
+  apiKey: "AIzaSyA2MG7LnOTT2nfMMyJAe6jnydtRo9NykTQ",
+  authDomain: "rn-social-78eb0.firebaseapp.com",
+  projectId: "rn-social-78eb0",
+  storageBucket: "rn-social-78eb0.appspot.com",
+  messagingSenderId: "199506496304",
+  appId: "1:199506496304:web:a3aa8a9929d6e49a0f56f5",
+  measurementId: "G-D1W9BCC23Q"
 };
 
 // Initialize Firebase

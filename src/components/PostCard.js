@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
-export const PostCard = ({ photo, title, latitude, longitude, locationName }) => {
+export const PostCard = ({ postId, photo, title, latitude, longitude, locationName }) => {
     const navigation = useNavigation();
 
     return (
@@ -16,7 +16,7 @@ export const PostCard = ({ photo, title, latitude, longitude, locationName }) =>
 
             <View style={styles.postInfo}>
                 <TouchableOpacity style={styles.comments}
-                    onPress={() => navigation.navigate('Comments', { photo })}>
+                    onPress={() => navigation.navigate('Comments', { photo, postId})}>
                     <Feather name="message-circle"
                         size={24}
                         color={theme.colors.placeholder}/>
@@ -28,11 +28,8 @@ export const PostCard = ({ photo, title, latitude, longitude, locationName }) =>
 
                 <TouchableOpacity style={styles.location}
                     onPress={() => navigation.navigate('Map',
-                        {
-                            latitude: latitude,
-                            longitude: longitude,
-                            title: title,
-                        })}>
+                        { latitude, longitude, title }
+                    )}>
                     <Feather name="map-pin" size={24} color={theme.colors.placeholder} />
                         <Text style={{
                             ...styles.description,

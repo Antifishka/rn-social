@@ -3,12 +3,8 @@ import { View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 export default function MapScreen({ route }) {
+    const { latitude, longitude, title } = route.params;
     console.log("route.params from Map", route.params);
-    const {
-        latitude,
-        longitude,
-        title
-    } = route.params
     
     return (
         <View style={{ flex: 1 }}>

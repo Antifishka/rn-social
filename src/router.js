@@ -72,6 +72,7 @@ export const useRoute = (isAuth) => {
                         focused ? theme.colors.accent : "transparent",
                         focused ? theme.colors.white : theme.colors.secondaryText
                     ),
+                tabBarStyle: {  display: "none"},
             }}
         />
         <MainTab.Screen name='Profile'

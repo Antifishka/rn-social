@@ -1,14 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import { Image, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Camera } from 'expo-camera';
 import { FontAwesome } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
-export const MyCamera = ({ setCamera, onClickSnap, photo }) => {
+export const MyCamera = ({ photo, setState }) => {
+    const [camera, setCamera] = useState(null);
+
+    const takePhoto = async () => {
+        const { uri } = await camera.takePictureAsync();
+
+        setState((prevState) => ({ ...prevState, photo: uri }));
+        console.log("photo", uri);
+    }; 
     return (
         <>
             <Camera style={styles.camera} ref={setCamera}>
-                <TouchableOpacity onPress={onClickSnap}
+                <TouchableOpacity onPress={takePhoto}
                     style={{...styles.cameraBtn,
                         backgroundColor: photo ? 'rgba(255, 255, 255, 0.3)' :  theme.colors.white }}>
                     <FontAwesome name="camera" size={24}

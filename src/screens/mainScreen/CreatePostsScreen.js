@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import * as Location from "expo-location";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from '../../firebase/config';
+import { collection, addDoc } from "firebase/firestore"; 
+import { storage, db } from '../../firebase/config';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 import { MyCamera } from '../../components/MyCamera';
@@ -25,7 +26,6 @@ const initialState = {
 };
 
 export default function CreateScreen({ navigation }) {
-    const [camera, setCamera] = useState(null);
     const [state, setState] = useState(initialState);
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
@@ -41,6 +41,15 @@ export default function CreateScreen({ navigation }) {
                 console.log("Permission to access location was denied");
                 return;
             }
+
+            const locationRes = await Location.getCurrentPositionAsync();
+            setState((prevState) => ({
+                ...prevState,
+                latitude: locationRes.coords.latitude,
+                longitude: locationRes.coords.longitude
+            }));
+            console.log("latitude", locationRes.coords.latitude);
+            console.log("longitude", locationRes.coords.longitude);
         })();
     }, []);
 
@@ -61,20 +70,6 @@ export default function CreateScreen({ navigation }) {
         Keyboard.dismiss();
     };
 
-    const takePhoto = async () => {
-        const photo = await camera.takePictureAsync();
-        setState((prevState) => ({ ...prevState, photo: photo.uri }));
-        console.log("photo", photo.uri);
-
-        const location = await Location.getCurrentPositionAsync();
-        setState((prevState) => ({
-            ...prevState,
-            latitude: location.coords.latitude, longitude: location.coords.longitude
-        }));
-        console.log("latitude", location.coords.latitude);
-        console.log("longitude", location.coords.longitude);
-    };
-
     const uploadPhotoToServer = async () => {
         const response = await fetch(photo);
         const file = await response.blob(); // change format to Blob
@@ -87,13 +82,32 @@ export default function CreateScreen({ navigation }) {
         
         const imageURL = await getDownloadURL(imageRef); // get image URL
         console.log('imageURL', imageURL);
+
+        return imageURL;
     }
 
-    const sendData = () => {
+    const uploadPostToServer = async () => {
+        const { title, locationName, latitude, longitude } = state;
+        const imageURL = await uploadPhotoToServer();
+
+        // Add a new document with a generated id.
+        const docRef = await addDoc(collection(db, "posts"), {
+            title,
+            locationName,
+            latitude,
+            longitude, 
+            imageURL,
+        })
+
+        console.log("Document written with ID: ", docRef.id);
+    }
+
+    const sendData = async() => {
         if (!disabled) {
             return Alert.alert('Waiting for missing fields');
         }
-        uploadPhotoToServer();
+        
+        uploadPostToServer();
 
         navigation.navigate("Posts", { postData: state });
 
@@ -107,10 +121,8 @@ export default function CreateScreen({ navigation }) {
     return (
         <TouchableWithoutFeedback onPress={keyboardHide}>
             <View style={styles.container}>
-                <MyCamera
-                    setCamera={setCamera}
-                    onClickSnap={takePhoto}
-                    photo={photo} />
+                <MyCamera photo={photo}
+                    setState={setState} />
 
                 <Text style={{ ...styles.text, marginBottom: isShowKeyboard ? 2 : 48 }}>
                     {photo ? 'Редагувати фото' : 'Завантажте фото'}

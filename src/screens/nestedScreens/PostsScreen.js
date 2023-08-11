@@ -1,29 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
+import { collection, onSnapshot } from "firebase/firestore"; 
+import { db } from '../../firebase/config';
 import { UserCard } from '../../components/UserCard';
 import { PostCard } from '../../components/PostCard';
 import { theme } from '../../constants/theme';
 
-export default function PostsScreen({ route }) {
+export default function PostsScreen() {
     const [posts, setPosts] = useState([]);
-    console.log("route.params", route.params);
+
+    const getPosts = async() => {
+        // receive posts from db
+        onSnapshot(collection(db, "posts"), (data) =>
+            setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        );
+    }
 
     useEffect(() => {
-        if (route.params) {
-            setPosts((prevState) => [...prevState, route.params.postData]);
-        }
-    }, [route.params]);
-    console.log("posts", posts); 
+        getPosts();
+        console.log("posts", posts);
+    }, []);
 
     return (
         <View style={styles.container}>
             <UserCard />
             
             <FlatList data={posts}
-                keyExtractor={(item, idx) => idx.toString()}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <PostCard
-                        photo={item.photo}
+                        postId={item.id}
+                        photo={item.imageURL}
                         title={item.title}
                         latitude={item.latitude}
                         longitude={item.longitude}

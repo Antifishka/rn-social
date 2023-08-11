@@ -8,8 +8,7 @@ export const theme = {
     placeholder: "#BDBDBD",
     white: "#ffffff",
     secondaryAccent: "#1B4371",
-    
-    active: "#B9651F",
     comment: "rgba(0, 0, 0, 0.03)",
+    active: "#B9651F",
   },
 };
