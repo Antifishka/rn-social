@@ -34,7 +34,8 @@ export default function PostsScreen() {
                         title={item.title}
                         latitude={item.latitude}
                         longitude={item.longitude}
-                        locationName={item.locationName} />
+                        locationName={item.locationName}
+                        comments={item.comments} />
                 )} 
             />
         </View>

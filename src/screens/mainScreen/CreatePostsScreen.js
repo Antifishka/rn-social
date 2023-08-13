@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../redux/auth/auth-selector';
 import {
     TouchableWithoutFeedback,
     View,
@@ -28,7 +30,7 @@ const initialState = {
 export default function CreateScreen({ navigation }) {
     const [state, setState] = useState(initialState);
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-
+    const { userId } = useSelector(selectUser);
     const { photo, title, locationName } = state;
     const disabled = photo && title && locationName;
 
@@ -97,6 +99,7 @@ export default function CreateScreen({ navigation }) {
             latitude,
             longitude, 
             imageURL,
+            userId,
         })
 
         console.log("Document written with ID: ", docRef.id);

@@ -5,8 +5,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
-export const PostCard = ({ postId, photo, title, latitude, longitude, locationName }) => {
+export const PostCard = ({ postId, photo, title, latitude, longitude, locationName, comments }) => {
     const navigation = useNavigation();
+    console.log("comments", comments);
 
     return (
         <View style={styles.post}>
@@ -22,7 +23,8 @@ export const PostCard = ({ postId, photo, title, latitude, longitude, locationNa
                         color={theme.colors.placeholder}/>
                     <Text style={{
                         ...styles.description,
-                        color: theme.colors.placeholder}}>0
+                        color: theme.colors.placeholder}} >
+                        {comments ? comments.length : '0'}
                     </Text>
                 </TouchableOpacity>
 
