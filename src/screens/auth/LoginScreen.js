@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.white,
   },
   formTitle: {
     marginBottom: 33,

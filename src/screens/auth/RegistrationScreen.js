@@ -6,12 +6,11 @@ import {
     Text,
     TextInput,
     TouchableOpacity, 
-    Dimensions,
     Keyboard,
 } from "react-native";
 import { authSingUpUser } from "../../redux/auth/auth-operations";
 import { Container } from "../../components/Container";
-import { Ionicons } from '@expo/vector-icons';
+import { Avatar } from "../../components/Avatar";
 import { theme } from "../../constants/theme";
 
 const initialState = {
@@ -24,22 +23,7 @@ export default function RegistrationScreen({ navigation }) {
     const [state, setState] = useState(initialState);
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [isShowPassword, setIsShowPassword] = useState(false);
-
     const dispatch = useDispatch();
-
-    const [dimensions, setDimensions] = useState(
-        Dimensions.get("window").width);
-
-    useEffect(() => {
-        const onChange = () => {
-        const width = Dimensions.get("window").width;
-
-        setDimensions(width);
-        };
-
-        const dimensionsHandler = Dimensions.addEventListener("change", onChange);
-        return () => dimensionsHandler.remove();
-    }, []);
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
@@ -62,13 +46,7 @@ export default function RegistrationScreen({ navigation }) {
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 32 : 45,
             }}>
-                <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
-                    <TouchableOpacity style={styles.avatarBtn}>
-                        <Ionicons name="add"
-                            size={20}    
-                            color={theme.colors.accent} />
-                    </TouchableOpacity>
-                </View>
+                <Avatar />
                                 
                 <Text style={styles.formTitle}>Реєстрація</Text>
 
@@ -137,27 +115,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
-        backgroundColor: "#FFFFFF",
-    },
-    avatarThumb: {
-        position: "absolute",
-        top: -60,
-        width: 120,
-        height: 120,
-        borderRadius: 16,
-        backgroundColor: "#F6F6F6",
-    },
-    avatarBtn: {
-        position: "absolute",
-        right: -25 / 2,
-        bottom: 14,
-        justifyContent: "center",
-        alignItems: "center",
-        width: 25,
-        height: 25,
-        borderRadius: 50,
-        borderWidth: 1,
-        borderColor: theme.colors.accent,
+        backgroundColor: theme.colors.white,
     },
     formTitle: {
         marginBottom: 33,

@@ -27,7 +27,6 @@ export const Container = ({ onClick, children }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
     },
     imageBg: {
         flex: 1,
