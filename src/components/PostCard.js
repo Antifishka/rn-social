@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { db } from '../firebase/config';
+import { collection, doc, onSnapshot } from "firebase/firestore"; 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Photo } from "./Photo";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
-export const PostCard = ({ postId, photo, title, latitude, longitude, locationName, comments }) => {
+export const PostCard = ({ postId, photo, title, latitude, longitude, locationName }) => {
     const navigation = useNavigation();
-    console.log("comments", comments);
+    const [comments, setComments] = useState();
+
+    const getComments = async () => {
+        const postRef = doc(db, "posts", postId); // find post
+        const commentsListRef = collection(postRef, "comments"); // find comments collection
+
+        onSnapshot(commentsListRef, (data) =>
+            setComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        );
+    }
+
+    useEffect(() => {
+        getComments();
+    }, []);
 
     return (
         <View style={styles.post}>
@@ -24,7 +39,7 @@ export const PostCard = ({ postId, photo, title, latitude, longitude, locationNa
                     <Text style={{
                         ...styles.description,
                         color: theme.colors.placeholder}} >
-                        {comments ? comments.length : '0'}
+                        {comments?.length}
                     </Text>
                 </TouchableOpacity>
 

@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
-import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
+import { pickImage } from '../../helpers/pickImage';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
-export const Avatar = () => {
+export const Avatar = ({avatar, setAvatar}) => {
     const [dimensions, setDimensions] = useState(
         Dimensions.get("window").width);
 
@@ -18,9 +19,22 @@ export const Avatar = () => {
         return () => dimensionsHandler.remove();
     }, []);
 
+    const getUserPhoto = async () => {
+        const result = await pickImage()
+
+        setAvatar(result);
+    }
+
+    const removeUserPhoto = () => {
+        setAvatar(null);
+    }
+
     return (
         <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
-            <TouchableOpacity style={styles.avatarBtn}>
+            <Image></Image>
+
+            <TouchableOpacity style={styles.avatarBtn}
+                onPress={getUserPhoto}>
                 <Ionicons name="add"
                     size={20}    
                     color={theme.colors.accent} />

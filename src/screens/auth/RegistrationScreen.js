@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
     StyleSheet,
@@ -11,16 +11,18 @@ import {
 import { authSingUpUser } from "../../redux/auth/auth-operations";
 import { Container } from "../../components/Container";
 import { Avatar } from "../../components/Avatar";
+import { Title } from "../../components/Title";
 import { theme } from "../../constants/theme";
 
 const initialState = {
-  nickname: "",
-  email: "",
-  password: "",
+    nickname: "",
+    email: "",
+    password: "",
 };
 
 export default function RegistrationScreen({ navigation }) {
     const [state, setState] = useState(initialState);
+    const [avatar, setAvatar] = useState(null);
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [isShowPassword, setIsShowPassword] = useState(false);
     const dispatch = useDispatch();
@@ -46,9 +48,9 @@ export default function RegistrationScreen({ navigation }) {
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 32 : 45,
             }}>
-                <Avatar />
+                <Avatar avatar={avatar} setAvatar={setAvatar} />
                                 
-                <Text style={styles.formTitle}>Реєстрація</Text>
+                <Title>Реєстрація</Title>
 
                 <TextInput
                     style={styles.input}
@@ -116,13 +118,6 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         backgroundColor: theme.colors.white,
-    },
-    formTitle: {
-        marginBottom: 33,
-        fontFamily: "Roboto-Medium",
-        fontSize: 30,
-        textAlign: "center",
-        color: theme.colors.mainText,
     },
     input: {
         marginBottom: 16,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../../firebase/config';
 import { useSelector } from 'react-redux';
+import { db } from '../../firebase/config';
 import { selectUser } from '../../redux/auth/auth-selector';
 import { collection, doc, addDoc, serverTimestamp, onSnapshot } from "firebase/firestore"; 
 import { View, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
@@ -38,7 +38,6 @@ export default function CommentsScreen({ route }) {
 
     useEffect(() => {
         getComments();
-        console.log("comments", comments);
     }, []);
 
     const onSubmit = () => {

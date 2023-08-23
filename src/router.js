@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Platform } from "react-native";
+import { StyleSheet, View, Platform, TouchableOpacity } from "react-native";
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RegistrationScreen from "./screens/auth/RegistrationScreen";
@@ -58,13 +58,21 @@ export const useRoute = (isAuth) => {
                         focused,
                         focused ? theme.colors.accent : "transparent",
                         focused ? theme.colors.white : theme.colors.secondaryText
-                    ),               
+                    ),
             }}
         />
         <MainTab.Screen name='Create'
             component={CreateScreen}
-            options={{
+            options={({ navigation }) => ({
                 headerTitle: "Створити публікацію",
+                headerLeft: () => (
+                        <TouchableOpacity
+                            style={styles.backBtn}
+                            activeOpacity={0.8}
+                            onPress={()=> navigation.goBack()} >
+                            <Feather name="arrow-left" size={24} color={theme.colors.secondaryText} />
+                        </TouchableOpacity>    
+                    ),
                 tabBarIcon: ({ focused }) => 
                     createTabIcon(
                         "add-outline",
@@ -73,7 +81,7 @@ export const useRoute = (isAuth) => {
                         focused ? theme.colors.white : theme.colors.secondaryText
                     ),
                 tabBarStyle: {  display: "none"},
-            }}
+            })}
         />
         <MainTab.Screen name='Profile'
             component={ProfileScreen}
@@ -101,9 +109,7 @@ const styles = StyleSheet.create({
     header: {
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.placeholder,
-        // fontFamily: "Roboto-Medium",
-        // fontSize: 17,
-    },
+    },   
     iconWrapper: {
         justifyContent: "center",
         alignItems: "center",
@@ -112,6 +118,9 @@ const styles = StyleSheet.create({
         marginTop: 9,
         marginBottom: Platform.OS === 'android' ? 22 : 0,
         borderRadius: 20
+    },
+    backBtn: {
+        marginLeft: 16,
     },
     tabBar: {
         ...Platform.select({

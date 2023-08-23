@@ -9,8 +9,9 @@ import {
   Keyboard,
 } from "react-native";
 import { authSingInUser } from "../../redux/auth/auth-operations";
-import { theme } from "../../constants/theme";
 import { Container } from "../../components/Container";
+import { Title } from "../../components/Title";
+import { theme } from "../../constants/theme";
 
 const initialState = {
   email: "",
@@ -45,7 +46,7 @@ export default function LoginScreen({ navigation }) {
           ...styles.form,
           paddingBottom: isShowKeyboard ? 32 : 111,
         }}>
-        <Text style={styles.formTitle}>Увійти</Text>
+        <Title>Увійти</Title>
                   
         <TextInput
           style={styles.input}
@@ -103,23 +104,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     backgroundColor: theme.colors.white,
   },
-  formTitle: {
-    marginBottom: 33,
-    fontFamily: "Roboto-Medium",
-    fontSize: 30,
-    textAlign: "center",
-    color: "#212121",
-  },
   input: {
     marginBottom: 16,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: "#E8E8E8",
+    borderColor: theme.colors.border,
     height: 50,
     borderRadius: 8,
     fontFamily: "Roboto-Regular",
     color: theme.colors.mainText,
-    backgroundColor: "#F6F6F6",
+    backgroundColor: theme.colors.background,
   },
     inputBtn: {
     position: "absolute",
