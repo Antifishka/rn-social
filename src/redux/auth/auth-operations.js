@@ -6,26 +6,29 @@ import {
     signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase/config";
+import { uploadPhotoToServer } from "../../firebase/uploadPhotoToServer";
 import { updateUserProfile, authStateChange, authSignOut } from "./auth-slice";
 
-export const authSingUpUser = ({ email, password, nickname }) => async (dispatch) => {
+export const authSingUpUser = ({ email, password, nickname, avatar }) => async (dispatch) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password); 
 
+        const avatarURL = await uploadPhotoToServer(avatar, 'avatarImages');
         await updateProfile(auth.currentUser, {
-            displayName: nickname
+            displayName: nickname,
+            photoURL: avatarURL,
         })
 
-        const { uid, displayName } = await auth.currentUser;
+        const { uid, displayName, photoURL } = await auth.currentUser;
 
         dispatch(updateUserProfile({
             userId: uid,
             nickname: displayName,
             email: email,
+            avatarURL: photoURL,
         }));
 
     } catch (error) {
-        console.log('error', error);
         console.log('error.message', error.message);
     }
 };
@@ -51,6 +54,7 @@ export const authStateChangeUser = () => async (dispatch) => {
                 nickname: user.displayName,
                 userId: user.uid,
                 email: user.email,
+                avatarURL: user.photoURL,
             }
 
             dispatch(authStateChange({ stateChange: true }));

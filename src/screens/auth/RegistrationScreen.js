@@ -37,9 +37,10 @@ export default function RegistrationScreen({ navigation }) {
         keyboardHide();
 
         console.log(state);
-        dispatch(authSingUpUser(state));
+        dispatch(authSingUpUser({ ...state, avatar }));
 
         setState(initialState);
+        setAvatar(null);
     };
 
     return (

@@ -12,9 +12,9 @@ import {
     Alert
 } from 'react-native';
 import * as Location from "expo-location";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore"; 
-import { storage, db } from '../../firebase/config';
+import { db } from '../../firebase/config';
+import { uploadPhotoToServer } from '../../firebase/uploadPhotoToServer';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 import { MyCamera } from '../../components/MyCamera';
@@ -72,25 +72,9 @@ export default function CreateScreen({ navigation }) {
         Keyboard.dismiss();
     };
 
-    const uploadPhotoToServer = async () => {
-        const response = await fetch(photo);
-        const file = await response.blob(); // change format to Blob
-
-        const imageId = Date.now().toString();
-
-        const imageRef = ref(storage, `postImages/${imageId}`);
-
-        await uploadBytes(imageRef, file); // upload image
-        
-        const imageURL = await getDownloadURL(imageRef); // get image URL
-        console.log('imageURL', imageURL);
-
-        return imageURL;
-    }
-
     const uploadPostToServer = async () => {
-        const { title, locationName, latitude, longitude } = state;
-        const imageURL = await uploadPhotoToServer();
+        const { title, locationName, latitude, longitude, photo } = state;
+        const imageURL = await uploadPhotoToServer(photo, 'postImages');
 
         // Add a new document with a generated id.
         const docRef = await addDoc(collection(db, "posts"), {

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { View, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
-import { pickImage } from '../../helpers/pickImage';
-import { Ionicons } from '@expo/vector-icons';
+import { pickImage } from '../helpers/pickImage';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
 export const Avatar = ({avatar, setAvatar}) => {
@@ -31,14 +31,22 @@ export const Avatar = ({avatar, setAvatar}) => {
 
     return (
         <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
-            <Image></Image>
-
-            <TouchableOpacity style={styles.avatarBtn}
-                onPress={getUserPhoto}>
-                <Ionicons name="add"
-                    size={20}    
-                    color={theme.colors.accent} />
-            </TouchableOpacity>
+            {avatar
+                ? (<>
+                    <Image source={{ uri: avatar }}
+                        style={styles.img}
+                        alt='user photo' />
+                    <TouchableOpacity style={{ ...styles.avatarBtn,
+                        borderColor: theme.colors.border }}
+                        onPress={removeUserPhoto}>
+                        <AntDesign name="close" size={16} color={theme.colors.placeholder} />
+                    </TouchableOpacity>
+                </>)
+                : <TouchableOpacity style={styles.avatarBtn}
+                        onPress={getUserPhoto}>
+                        <Ionicons name="add" size={20} color={theme.colors.accent} />
+                </TouchableOpacity>
+            }
         </View>
     )
 }
@@ -50,7 +58,13 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         borderRadius: 16,
-        backgroundColor: "#F6F6F6",
+        backgroundColor: theme.colors.background,
+    },
+    img: {
+        width: 120,
+        height: 120,
+        borderRadius: 16,
+        resizeMode: "cover",
     },
     avatarBtn: {
         position: "absolute",

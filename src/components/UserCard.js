@@ -5,14 +5,13 @@ import { Image, View, Text, StyleSheet } from "react-native";
 import { theme } from "../constants/theme";
 
 export const UserCard = () => {
-    const { nickname, email, avatarUrl } = useSelector(selectUser);
+    const { nickname, email, avatarURL } = useSelector(selectUser);
 
     return (
         <View style={styles.container}>
             <View style={styles.avatarThumb}>
-                <Image style={styles.avatar}
-                    source={require("../../assets/images/avatar.png")}
-                    alt="avatar" />
+                {avatarURL &&
+                    <Image style={styles.avatar} source={{ uri: avatarURL }} alt="user photo" />}
             </View>
            
             <View>
@@ -35,9 +34,11 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 16,
+        backgroundColor: theme.colors.background,
     },
     avatar: {
         width: 60,
+        height: 60,
         resizeMode: "cover",
     },
     name: {

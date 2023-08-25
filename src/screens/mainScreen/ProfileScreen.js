@@ -15,7 +15,7 @@ import { theme } from '../../constants/theme';
 
 export default function ProfileScreen() {
     const [userPosts, setUserPosts] = useState([]);
-    const { userId, nickname } = useSelector(selectUser);
+    const { userId, nickname, avatarURL} = useSelector(selectUser);
     const dispatch = useDispatch();
 
     const getUserPosts = async () => {
@@ -33,7 +33,7 @@ export default function ProfileScreen() {
     return (
         <Container>
             <View style={styles.wrapper}>
-                <Avatar />
+                <Avatar avatar={avatarURL}/>
 
                 <TouchableOpacity
                     style={styles.iconLogout}
