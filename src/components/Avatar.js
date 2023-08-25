@@ -1,33 +1,26 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { View, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
 import { pickImage } from '../helpers/pickImage';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
-export const Avatar = ({avatar, setAvatar}) => {
+
+export const Avatar = ({ avatar, addAvatar, removeAvatar }) => {
     const [dimensions, setDimensions] = useState(
         Dimensions.get("window").width);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const onChange = () => {
-        const width = Dimensions.get("window").width;
+            const width = Dimensions.get("window").width;
 
-        setDimensions(width);
+            setDimensions(width);
         };
 
         const dimensionsHandler = Dimensions.addEventListener("change", onChange);
         return () => dimensionsHandler.remove();
     }, []);
-
-    const getUserPhoto = async () => {
-        const result = await pickImage()
-
-        setAvatar(result);
-    }
-
-    const removeUserPhoto = () => {
-        setAvatar(null);
-    }
 
     return (
         <View style={{ ...styles.avatarThumb, left: (dimensions - 120) / 2 }}>
@@ -38,12 +31,12 @@ export const Avatar = ({avatar, setAvatar}) => {
                         alt='user photo' />
                     <TouchableOpacity style={{ ...styles.avatarBtn,
                         borderColor: theme.colors.border }}
-                        onPress={removeUserPhoto}>
+                        onPress={removeAvatar}>
                         <AntDesign name="close" size={16} color={theme.colors.placeholder} />
                     </TouchableOpacity>
                 </>)
                 : <TouchableOpacity style={styles.avatarBtn}
-                        onPress={getUserPhoto}>
+                        onPress={addAvatar}>
                         <Ionicons name="add" size={20} color={theme.colors.accent} />
                 </TouchableOpacity>
             }

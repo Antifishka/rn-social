@@ -33,6 +33,12 @@ export default function RegistrationScreen({ navigation }) {
         Keyboard.dismiss();
     };
 
+    const getUserPhoto = async () => {
+        const result = await pickImage()
+
+        setAvatar(result);
+    }
+
     const handleSubmit = () => {
         keyboardHide();
 
@@ -49,7 +55,9 @@ export default function RegistrationScreen({ navigation }) {
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 32 : 45,
             }}>
-                <Avatar avatar={avatar} setAvatar={setAvatar} />
+                <Avatar avatar={avatar}
+                    addAvatar={getUserPhoto}
+                    removeAvatar={() => setAvatar(null)} />
                                 
                 <Title>Реєстрація</Title>
 

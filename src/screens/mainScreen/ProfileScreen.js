@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/auth/auth-selector';
 import { authSingOutUser } from "../../redux/auth/auth-operations";
 import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { pickImage } from '../../helpers/pickImage';
+import { addUserPhoto, removeUserPhoto } from '../../redux/auth/auth-operations';
 import { Container } from '../../components/Container';
 import { Avatar } from '../../components/Avatar';
 import { Title } from '../../components/Title';
@@ -28,12 +30,20 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         getUserPosts();
-    },[])
+    }, [])
+    
+    const getUserPhoto = async () => {
+        const result = await pickImage();
+
+        dispatch(addUserPhoto(result));
+    }
     
     return (
         <Container>
             <View style={styles.wrapper}>
-                <Avatar avatar={avatarURL}/>
+                <Avatar avatar={avatarURL}
+                    addAvatar={getUserPhoto}
+                    removeAvatar={() => dispatch(removeUserPhoto())} />
 
                 <TouchableOpacity
                     style={styles.iconLogout}

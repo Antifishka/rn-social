@@ -62,3 +62,39 @@ export const authStateChangeUser = () => async (dispatch) => {
         }
     }); 
 };
+
+export const addUserPhoto = (avatar) => async (dispatch) => {
+    try {
+        const avatarURL = await uploadPhotoToServer(avatar, 'avatarImages');
+
+        await updateProfile(auth.currentUser, {
+            photoURL: avatarURL,
+        })
+
+        const { photoURL } = await auth.currentUser;
+
+        dispatch(updateUserProfile({
+            avatarURL: photoURL,
+        }));
+        
+    } catch (error) {
+        console.log('error', error);
+        console.log('error.message', error.message);
+    } 
+};
+
+export const removeUserPhoto = () => async (dispatch) => {
+    try {
+        await updateProfile(auth.currentUser, {
+            photoURL: null,
+        })
+
+        dispatch(updateUserProfile({
+            avatarURL: null,
+        }));
+        
+    } catch (error) {
+        console.log('error', error);
+        console.log('error.message', error.message);
+    } 
+};
