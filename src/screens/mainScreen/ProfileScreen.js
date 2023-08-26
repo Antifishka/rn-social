@@ -7,7 +7,7 @@ import { selectUser } from '../../redux/auth/auth-selector';
 import { authSingOutUser } from "../../redux/auth/auth-operations";
 import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { pickImage } from '../../helpers/pickImage';
-import { addUserPhoto, removeUserPhoto } from '../../redux/auth/auth-operations';
+import { addUserPhotoToServer, removeUserPhotoFromServer } from '../../redux/auth/auth-operations';
 import { Container } from '../../components/Container';
 import { Avatar } from '../../components/Avatar';
 import { Title } from '../../components/Title';
@@ -35,7 +35,7 @@ export default function ProfileScreen() {
     const getUserPhoto = async () => {
         const result = await pickImage();
 
-        dispatch(addUserPhoto(result));
+        dispatch(addUserPhotoToServer(result));
     }
     
     return (
@@ -43,7 +43,7 @@ export default function ProfileScreen() {
             <View style={styles.wrapper}>
                 <Avatar avatar={avatarURL}
                     addAvatar={getUserPhoto}
-                    removeAvatar={() => dispatch(removeUserPhoto())} />
+                    removeAvatar={() => dispatch(removeUserPhotoFromServer())} />
 
                 <TouchableOpacity
                     style={styles.iconLogout}

@@ -9,6 +9,7 @@ import {
     Keyboard,
 } from "react-native";
 import { authSingUpUser } from "../../redux/auth/auth-operations";
+import { pickImage } from '../../helpers/pickImage';
 import { Container } from "../../components/Container";
 import { Avatar } from "../../components/Avatar";
 import { Title } from "../../components/Title";

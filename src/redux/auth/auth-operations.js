@@ -7,17 +7,23 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { uploadPhotoToServer } from "../../firebase/uploadPhotoToServer";
-import { updateUserProfile, authStateChange, authSignOut } from "./auth-slice";
+import { updateUserProfile, authStateChange, authSignOut, addUserPhoto, removeUserPhoto } from "./auth-slice";
 
 export const authSingUpUser = ({ email, password, nickname, avatar }) => async (dispatch) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password); 
 
-        const avatarURL = await uploadPhotoToServer(avatar, 'avatarImages');
-        await updateProfile(auth.currentUser, {
-            displayName: nickname,
-            photoURL: avatarURL,
-        })
+        if (avatar) {
+            const avatarURL = await uploadPhotoToServer(avatar, 'avatarImages');
+            await updateProfile(auth.currentUser, {
+                displayName: nickname,
+                photoURL: avatarURL,
+            })
+        } else {
+            await updateProfile(auth.currentUser, {
+                displayName: nickname,
+            })
+        };
 
         const { uid, displayName, photoURL } = await auth.currentUser;
 
@@ -63,7 +69,7 @@ export const authStateChangeUser = () => async (dispatch) => {
     }); 
 };
 
-export const addUserPhoto = (avatar) => async (dispatch) => {
+export const addUserPhotoToServer = (avatar) => async (dispatch) => {
     try {
         const avatarURL = await uploadPhotoToServer(avatar, 'avatarImages');
 
@@ -73,7 +79,7 @@ export const addUserPhoto = (avatar) => async (dispatch) => {
 
         const { photoURL } = await auth.currentUser;
 
-        dispatch(updateUserProfile({
+        dispatch(addUserPhoto({
             avatarURL: photoURL,
         }));
         
@@ -83,15 +89,13 @@ export const addUserPhoto = (avatar) => async (dispatch) => {
     } 
 };
 
-export const removeUserPhoto = () => async (dispatch) => {
+export const removeUserPhotoFromServer = () => async (dispatch) => {
     try {
         await updateProfile(auth.currentUser, {
             photoURL: null,
         })
 
-        dispatch(updateUserProfile({
-            avatarURL: null,
-        }));
+        dispatch(removeUserPhoto());
         
     } catch (error) {
         console.log('error', error);

@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { View, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
-import { pickImage } from '../helpers/pickImage';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
-
 
 export const Avatar = ({ avatar, addAvatar, removeAvatar }) => {
     const [dimensions, setDimensions] = useState(
         Dimensions.get("window").width);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const onChange = () => {
@@ -29,20 +25,21 @@ export const Avatar = ({ avatar, addAvatar, removeAvatar }) => {
                     <Image source={{ uri: avatar }}
                         style={styles.img}
                         alt='user photo' />
-                    <TouchableOpacity style={{ ...styles.avatarBtn,
-                        borderColor: theme.colors.border }}
-                        onPress={removeAvatar}>
+                    <TouchableOpacity style={{
+                        ...styles.avatarBtn, borderColor: theme.colors.border
+                    }}
+                        onPress={removeAvatar} >
                         <AntDesign name="close" size={16} color={theme.colors.placeholder} />
                     </TouchableOpacity>
                 </>)
                 : <TouchableOpacity style={styles.avatarBtn}
-                        onPress={addAvatar}>
-                        <Ionicons name="add" size={20} color={theme.colors.accent} />
+                    onPress={addAvatar}>
+                    <Ionicons name="add" size={20} color={theme.colors.accent} />
                 </TouchableOpacity>
             }
         </View>
     )
-}
+};
 
 const styles = StyleSheet.create({
     avatarThumb: {

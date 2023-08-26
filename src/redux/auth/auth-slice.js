@@ -24,6 +24,13 @@ const authSlice = createSlice({
             stateChange: payload.stateChange,
         }),
         authSignOut: () => state,
+        addUserPhoto: (state, { payload }) => ({
+            ...state,
+            avatarURL: payload.avatarURL,
+        }),
+        removeUserPhoto: (state, { payload }) => ({
+            avatarURL: null,
+        }),
     }
 })
 
