@@ -6,6 +6,8 @@ import { collection, doc, addDoc, serverTimestamp, onSnapshot } from "firebase/f
 import { View, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Photo } from '../../components/Photo';
 import { Comment } from '../../components/Comment';
+import dayjs from 'dayjs';
+import 'dayjs/locale/uk'
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 
@@ -13,15 +15,15 @@ export default function CommentsScreen({ route }) {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
     const { photo, postId } = route.params;
-    const { nickname } = useSelector(selectUser);
+    const { userId, avatarURL } = useSelector(selectUser);
 
     const addComment = async () => {
         const postRef = doc(db, "posts", postId); // find post
         const commentsListRef = collection(postRef, "comments"); // find comments collection
         const commentRef = await addDoc(commentsListRef, {
             comment,
-            nickname,
-            timestamp: serverTimestamp(),
+            userId,
+            avatarURL,
         });
 
         console.log("Document written with ID: ", commentRef.id);
@@ -55,8 +57,12 @@ export default function CommentsScreen({ route }) {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Comment
+                        isCurrentUser={item.userId === userId ? true : false}
                         text={item.comment}
-                        time={item.timestamp} />
+                        createdAt={dayjs(item.createdAt).locale('uk').format(
+                            'DD MMMM, YYYY | HH:mm'
+                        )}
+                        avatarURL={item.avatarURL} />
                 )} 
             />
 

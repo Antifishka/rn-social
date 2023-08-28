@@ -71,6 +71,7 @@ export const authStateChangeUser = () => async (dispatch) => {
 
 export const addUserPhotoToServer = (avatar) => async (dispatch) => {
     try {
+        console.log("avatar", avatar)
         const avatarURL = await uploadPhotoToServer(avatar, 'avatarImages');
 
         await updateProfile(auth.currentUser, {
@@ -78,13 +79,13 @@ export const addUserPhotoToServer = (avatar) => async (dispatch) => {
         })
 
         const { photoURL } = await auth.currentUser;
+        console.log("photoURL",photoURL)
 
         dispatch(addUserPhoto({
             avatarURL: photoURL,
         }));
         
     } catch (error) {
-        console.log('error', error);
         console.log('error.message', error.message);
     } 
 };
