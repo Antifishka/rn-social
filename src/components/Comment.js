@@ -1,12 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { theme } from "../constants/theme";
 
-export const Comment = ({isCurrentUser, text, createdAt, avatarURL}) => {
+export const Comment = ({isCurrentUser, text, createdAt, avatarURL, isShowKeyboard}) => {
     return (
         <View style={{
             ...styles.wrapper,
-            flexDirection: isCurrentUser ? "row-reverse" : "row"}}>
+            flexDirection: isCurrentUser ? "row-reverse" : "row",
+            marginTop : isShowKeyboard ? 0 : 24}}>
             <View style={styles.avatarThumb}>
                 {avatarURL && <Image source={{ uri: avatarURL }}
                     style={styles.avatar}
@@ -14,7 +15,8 @@ export const Comment = ({isCurrentUser, text, createdAt, avatarURL}) => {
             </View>
 
             <View style={{ ...styles.textWrapper,
-                borderTopRightRadius: isCurrentUser ? 0 : 6 }}>
+                borderTopRightRadius: isCurrentUser ? 0 : 6,
+                borderTopLeftRadius: isCurrentUser ? 6 : 0 }}>
                 <Text style={styles.text}>{text}</Text>
                 <Text style={{ ...styles.date,
                     textAlign: isCurrentUser ? "left" : "right"}}>{createdAt}</Text>
@@ -27,7 +29,6 @@ const styles = StyleSheet.create({
     wrapper: {
         gap: 16,
         width: "100%",
-        marginTop: 24,
     },
     avatarThumb: {
         overflow: "hidden",

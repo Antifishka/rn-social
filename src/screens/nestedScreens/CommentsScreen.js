@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { db } from '../../firebase/config';
 import { selectUser } from '../../redux/auth/auth-selector';
-import { collection, doc, addDoc, serverTimestamp, onSnapshot } from "firebase/firestore"; 
-import { View, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { collection, doc, addDoc, onSnapshot } from "firebase/firestore"; 
+import { View, TextInput, StyleSheet, TouchableOpacity, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Photo } from '../../components/Photo';
 import { Comment } from '../../components/Comment';
 import dayjs from 'dayjs';
@@ -14,6 +14,7 @@ import { theme } from '../../constants/theme';
 export default function CommentsScreen({ route }) {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
+    const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const { photo, postId } = route.params;
     const { userId, avatarURL } = useSelector(selectUser);
 
@@ -49,44 +50,54 @@ export default function CommentsScreen({ route }) {
         setComment('');
     }
 
+    const keyboardHide = () => {
+        setIsShowKeyboard(false);
+        Keyboard.dismiss();
+    };
+
     return (
-        <View style={styles.container}>
-            <Photo photo={photo} />
+        <TouchableWithoutFeedback onPress={keyboardHide}>
+            <View style={styles.container}>
+                <Photo photo={photo} />
 
-            <FlatList data={comments}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <Comment
-                        isCurrentUser={item.userId === userId ? true : false}
-                        text={item.comment}
-                        createdAt={dayjs(item.createdAt).locale('uk').format(
-                            'DD MMMM, YYYY | HH:mm'
-                        )}
-                        avatarURL={item.avatarURL} />
-                )} 
-            />
+                <FlatList data={comments}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <Comment
+                            isCurrentUser={item.userId === userId ? true : false}
+                            text={item.comment}
+                            createdAt={dayjs(item.createdAt).locale('uk').format(
+                                'DD MMMM, YYYY | HH:mm'
+                            )}
+                            avatarURL={item.avatarURL} />
+                    )} 
+                />
 
-            <View style={styles.inputWrapper}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Коментувати..."
-                    placeholderTextColor={theme.colors.placeholder}
-                    value={comment}
-                    onChangeText={(e) => setComment(e)} />
-                
-                <TouchableOpacity
-                    style={styles.btn}
-                    activeOpacity={0.8}
-                    onPress={onSubmit}>
-                    <AntDesign name="arrowup" size={22} color={theme.colors.white} />
-                </TouchableOpacity>
+                <View style={isShowKeyboard ? styles.inputWrapperKeyboard : styles.inputWrapper}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Коментувати..."
+                        placeholderTextColor={theme.colors.placeholder}
+                        value={comment}
+                        onFocus={()=> setIsShowKeyboard(true)}
+                        onChangeText={(e) => setComment(e)} />
+                    
+                    <TouchableOpacity
+                        style={{ ...styles.btn,
+                            top: isShowKeyboard ? 18 : 24 }}
+                        activeOpacity={0.8}
+                        onPress={onSubmit}>
+                        <AntDesign name="arrowup" size={22} color={theme.colors.white} />
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>   
     )
 };
 
 const styles = StyleSheet.create({
     container: {
+        position: "relative",
         flex: 1,
         paddingTop: 32,
         paddingHorizontal: 16,
@@ -94,11 +105,20 @@ const styles = StyleSheet.create({
     },
     inputWrapper: {
         position: "relative",
+        marginTop: "auto",
+        paddingVertical: 16,
+        backgroundColor: theme.colors.white,
+    },
+    inputWrapperKeyboard: {
+        position: "absolute",
+        paddingVertical: 10,
+        left: 16,
+        right: 16,
+        bottom: 256,
+        backgroundColor: theme.colors.white,
     },
     input: {
         height: 50,
-        marginTop: "auto",
-        marginBottom: 16,
         paddingLeft: 16,
         borderRadius: 50,
         borderWidth: 1,
@@ -110,7 +130,6 @@ const styles = StyleSheet.create({
     },
     btn: {
         position: "absolute",
-        top: 8,
         right: 8,
         width: 34,
         height: 34,

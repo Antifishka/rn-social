@@ -35,5 +35,5 @@ const authSlice = createSlice({
 })
 
 export const auth = authSlice.name;
-export const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
+export const { updateUserProfile, authStateChange, authSignOut, addUserPhoto, removeUserPhoto } = authSlice.actions;
 export const authReducer = authSlice.reducer;
