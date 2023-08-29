@@ -3,11 +3,12 @@ import { db } from '../firebase/config';
 import { collection, doc, onSnapshot } from "firebase/firestore"; 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Photo } from "./Photo";
+import { Likes } from "./Likes";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { theme } from "../constants/theme";
 
-export const PostCard = ({ postId, photo, title, latitude, longitude, locationName }) => {
+export const PostCard = ({ screen, postId, photo, title, latitude, longitude, locationName, likes, likesCount, isLiked }) => {
     const navigation = useNavigation();
     const [comments, setComments] = useState();
 
@@ -35,13 +36,19 @@ export const PostCard = ({ postId, photo, title, latitude, longitude, locationNa
                     onPress={() => navigation.navigate('Comments', { photo, postId})}>
                     <Feather name="message-circle"
                         size={24}
-                        color={theme.colors.placeholder}/>
+                        color={screen === 'profile' ? theme.colors.accent : theme.colors.placeholder} />
                     <Text style={{
-                        ...styles.description,
-                        color: theme.colors.placeholder}} >
+                        ...styles.count,
+                        color: screen === 'profile' ? theme.colors.mainText : theme.colors.placeholder}} >
                         {comments?.length}
                     </Text>
                 </TouchableOpacity>
+
+                <Likes postId={postId}
+                    likes={likes}
+                    likesCount={likesCount}
+                    isLiked={isLiked}
+                    screen={screen} />
 
                 <TouchableOpacity style={styles.location}
                     onPress={() => navigation.navigate('Map',
@@ -77,7 +84,7 @@ const styles = StyleSheet.create({
     comments: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 4,
+        gap: 6,
     },
     location: {
         flexDirection: "row",
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         gap: 4,
     },
-    description: {
+    count: {
         fontFamily: "Roboto-Regular",
         fontSize: 16,
         color: theme.colors.mainText,

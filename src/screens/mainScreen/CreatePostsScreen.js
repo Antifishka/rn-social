@@ -84,6 +84,9 @@ export default function CreateScreen({ navigation }) {
             longitude, 
             imageURL,
             userId,
+            likesCount: 0,
+            likes: [],
+            isLiked: false,
         })
 
         console.log("Document written with ID: ", docRef.id);

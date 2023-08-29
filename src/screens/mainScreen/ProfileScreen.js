@@ -57,13 +57,16 @@ export default function ProfileScreen() {
                 <FlatList data={userPosts}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                         <PostCard
+                        <PostCard
+                            screen='profile'
                             postId={item.id}
                             photo={item.imageURL}
                             title={item.title}
                             latitude={item.latitude}
                             longitude={item.longitude}
-                            locationName={item.locationName} />
+                            locationName={item.locationName}
+                            likesCount={item.likesCount}
+                            likes={item.likes} />
                     )} 
                 />
             </View>    
