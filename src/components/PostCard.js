@@ -44,11 +44,11 @@ export const PostCard = ({ screen, postId, photo, title, latitude, longitude, lo
                     </Text>
                 </TouchableOpacity>
 
-                <Likes postId={postId}
+                <Likes screen={screen}
+                    postId={postId}
                     likes={likes}
                     likesCount={likesCount}
-                    isLiked={isLiked}
-                    screen={screen} />
+                    isLiked={isLiked} />
 
                 <TouchableOpacity style={styles.location}
                     onPress={() => navigation.navigate('Map',

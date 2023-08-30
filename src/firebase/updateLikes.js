@@ -5,9 +5,9 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore'
-import { db } from '../firebase/config'
+import { db } from './config'
 
-export const likeHandler = async (likes, postId, userId) => {
+export const updateLikes = async (likes, postId, userId) => {
   const postRef = doc(db, "posts", postId);
 
   if (!likes.includes(userId)) {

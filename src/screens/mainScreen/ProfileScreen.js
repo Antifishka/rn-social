@@ -5,18 +5,18 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/auth/auth-selector';
 import { authSingOutUser } from "../../redux/auth/auth-operations";
-import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { pickImage } from '../../helpers/pickImage';
 import { addUserPhotoToServer, removeUserPhotoFromServer } from '../../redux/auth/auth-operations';
 import { Container } from '../../components/Container';
 import { Avatar } from '../../components/Avatar';
 import { Title } from '../../components/Title';
-import { PostCard } from '../../components/PostCard';
+import { PostList } from '../../components/PostList';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 
 export default function ProfileScreen() {
-    const [userPosts, setUserPosts] = useState([]);
+    const [initUserPosts, setInitUserPosts] = useState([]);
     const { userId, nickname, avatarURL} = useSelector(selectUser);
     const dispatch = useDispatch();
 
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
         const userQuery = query(collection(db, "posts"), where("userId", "==", userId));
         
         onSnapshot(userQuery, (data) =>
-            setUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            setInitUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
         );
     }
 
@@ -54,21 +54,8 @@ export default function ProfileScreen() {
 
                 <Title>{nickname}</Title>
 
-                <FlatList data={userPosts}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <PostCard
-                            screen='profile'
-                            postId={item.id}
-                            photo={item.imageURL}
-                            title={item.title}
-                            latitude={item.latitude}
-                            longitude={item.longitude}
-                            locationName={item.locationName}
-                            likesCount={item.likesCount}
-                            likes={item.likes} />
-                    )} 
-                />
+                <PostList screen='profile' 
+                    initialPosts={initUserPosts} />
             </View>    
         </Container>
     )
@@ -77,7 +64,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     wrapper: {
         position: "relative",
-        minHeight: 600,
+        height: '100%',
         marginTop: 140,
         paddingTop: 22,
         paddingHorizontal: 16,
