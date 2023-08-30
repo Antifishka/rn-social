@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { db } from '../../firebase/config';
 import { selectUser } from '../../redux/auth/auth-selector';
+import { db } from '../../firebase/config';
 import { collection, doc, addDoc, onSnapshot } from "firebase/firestore"; 
+import { addComment } from '../../firebase/addComment';
 import { View, TextInput, StyleSheet, TouchableOpacity, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Photo } from '../../components/Photo';
 import { Comment } from '../../components/Comment';
@@ -18,18 +19,6 @@ export default function CommentsScreen({ route }) {
     const { photo, postId } = route.params;
     const { userId, avatarURL } = useSelector(selectUser);
 
-    const addComment = async () => {
-        const postRef = doc(db, "posts", postId); // find post
-        const commentsListRef = collection(postRef, "comments"); // find comments collection
-        const commentRef = await addDoc(commentsListRef, {
-            comment,
-            userId,
-            avatarURL,
-        });
-
-        console.log("Document written with ID: ", commentRef.id);
-    }
-
     const getComments = async () => {
         const postRef = doc(db, "posts", postId); // find post
         const commentsListRef = collection(postRef, "comments"); // find comments collection
@@ -43,8 +32,8 @@ export default function CommentsScreen({ route }) {
         getComments();
     }, []);
 
-    const onSubmit = () => {
-        addComment();
+    const onSubmit = async() => {
+        await addComment({ postId, comment, userId, avatarURL });
 
         console.log('comment', comment);
         setComment('');

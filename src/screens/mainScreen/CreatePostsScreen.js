@@ -12,9 +12,7 @@ import {
     Alert
 } from 'react-native';
 import * as Location from "expo-location";
-import { collection, addDoc } from "firebase/firestore"; 
-import { db } from '../../firebase/config';
-import { uploadPhotoToServer } from '../../firebase/uploadPhotoToServer';
+import { addPost } from '../../firebase/addPost';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../../constants/theme'; 
 import { MyCamera } from '../../components/MyCamera';
@@ -31,7 +29,7 @@ export default function CreateScreen({ navigation }) {
     const [state, setState] = useState(initialState);
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const { userId } = useSelector(selectUser);
-    const { photo, title, locationName } = state;
+    const { photo, title, locationName, latitude, longitude } = state;
     const disabled = photo && title && locationName;
 
     useEffect(() => {
@@ -72,31 +70,12 @@ export default function CreateScreen({ navigation }) {
         Keyboard.dismiss();
     };
 
-    const uploadPostToServer = async () => {
-        const { title, locationName, latitude, longitude, photo } = state;
-        const imageURL = await uploadPhotoToServer(photo, 'postImages');
-
-        // Add a new document with a generated id.
-        const docRef = await addDoc(collection(db, "posts"), {
-            title,
-            locationName,
-            latitude,
-            longitude, 
-            imageURL,
-            userId,
-            likesCount: 0,
-            likes: [],
-        })
-
-        console.log("Document written with ID: ", docRef.id);
-    }
-
     const sendData = async() => {
         if (!disabled) {
             return Alert.alert('Waiting for missing fields');
         }
         
-        uploadPostToServer();
+        await addPost({ photo, title, locationName, latitude, longitude, userId });
 
         navigation.navigate("Posts", { postData: state });
 
