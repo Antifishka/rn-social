@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         height: 51,
-        borderRadius: 100,
+        borderRadius: "50%",
     },
     sendBtnTitle: {
         fontFamily: "Roboto-Regular",
